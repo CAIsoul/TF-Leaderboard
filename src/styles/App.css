@@ -1,0 +1,65 @@
+html, body, #root {
+  height: 100%;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40px;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #f68933;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(20px + 2vmin);
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.Content {
+  display: flex; 
+  flex-direction: row;
+  flex: 1;
+}
+
+.Content {
+  flex: 1;
+}
+
+.OverviewPanel {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.DetailPanel {
+  width: 600px;
+  background-color: rgba(50, 50, 50, 0.5);
+  position: relative;
+  display: flex;
+}

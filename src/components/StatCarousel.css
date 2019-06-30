@@ -1,0 +1,92 @@
+.carousel {
+    flex: 1;
+    color: white;
+}
+
+.carousel, .carousel-inner, .carousel-item {
+    height: 100%;
+} 
+
+.carousel-item .carousel-caption {
+    top: 30px;
+    bottom: auto;
+    color: white;
+}
+
+.carousel-indicators {
+    top: 15px;
+    bottom: auto;
+}
+
+.carousel a.carousel-control-prev {
+    width: 50px;
+}
+
+.carousel a.carousel-control-next {
+    width: 50px;
+}
+
+.StatList {
+    padding-top: 120px;
+    padding-left: 60px;
+    padding-right: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+}
+
+.StatList:not(.Team) .MemberStatItem:first-child {
+    font-weight: bold;
+    font-size:20px;
+}
+
+.MemberStatItem, .TeamStatItem .TeamStat {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.MemberStatItem > div, .TeamStat > div {
+    color: white;
+    flex: 1;
+}
+
+.MemberStatItem > div.NameLabel, .TeamStat > div.NameLabel {
+    flex: 2;
+}
+
+.TeamStatItem {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.TeamStatItem .StatList {
+    padding: 0;
+}
+
+.TeamStatItem .StatList .MemberStatItem:first-child {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.TeamStatItem .TeamName {
+    font-weight: bold;
+}
+
+.TeamStatItem .underline {
+    width: 100%;
+    height: 1px;
+    background-color: white;
+}
+
+.TeamStat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+}

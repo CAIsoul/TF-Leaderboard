@@ -1,0 +1,56 @@
+.Leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 30px;
+  flex: 1;
+}
+
+.Leaderboard .title {
+  font-size: calc(10px + 4vmin);
+  color: #666;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.Leaderboard .underline {
+    height: 3px;
+    width: 100%;
+    background-color: #666;
+}
+
+.Leaderboard .content {
+  display: flex; 
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.Leaderboard .content .team {
+    height: calc(80px + 4vmin);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Leaderboard .content .name {
+    font-size: calc(10px + 2vmin);
+    width: 150px;
+}
+
+.Leaderboard .content .team .logo {
+    height: 100px;
+    width: 100px;
+}
+
+.Leaderboard .content .team .bar {
+    height: 40px;
+    background-color: #f32925;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.Leaderboard .content .team .score {
+    font-size: calc(6px + 2vmin);
+    width: 100px;
+}
