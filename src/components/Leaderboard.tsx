@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Team } from '../api/LeaderboardData';
-import crown from '../images/icons/crown.png';
+import trophy from '../images/icons/trophy.svg';
 import './Leaderboard.css';
 
 interface Props {
@@ -65,7 +65,7 @@ export default class Leaderboard extends PureComponent<Props, State> {
                             <div className='name'>{item.name}</div>
                             <div className='bar' style={{ width: (item.stat.total_score / maxScore) * totalBarWidth }}></div>
                             <div className='score'>{score}</div>
-                            { index === 0 ?  <img  src={crown} className='crown' alt='winner crown'/> : <div></div> }
+                            { index === 0 ?  <img  src={trophy} className='trophy' alt='winner trophy'/> : <div></div> }
                         </div>
                     );
                 }) }                

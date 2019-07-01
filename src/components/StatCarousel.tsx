@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Carousel } from 'react-bootstrap';
 import { Team, Member, Stat } from '../api/LeaderboardData';
+import crown from '../images/icons/crown.png';
 import './StatCarousel.css';
 
 interface Props {
@@ -31,12 +32,16 @@ export default class StatCarousel extends PureComponent<Props, State> {
 	}
 
 	renderTeamStat(teams: Team[]) {
+		teams.map(t => {
+
+		});
+
 		return (
 			<div className='StatList Team'>
 				{
 					teams.map((t, index) => {
 						return (
-							<div key={t.name} className='TeamStatItem'>
+							<div key={index} className='TeamStatItem'>
 								<div className='TeamName'>{t.name}</div>
 								<div className='TeamStat'>
 									<div>Cases: {t.stat.case_number}</div>
@@ -46,7 +51,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 								<div className='underline'></div>
 								<div className='TeamMembers'>
 									{
-										this.renderMemberStat(t.members)
+										this.renderMemberStat(t.members, false)
 									}
 								</div>
 							</div>
@@ -57,7 +62,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		);
 	}
 
-	renderMemberStat(members: Member[]) {
+	renderMemberStat(members: Member[], isMemberRankList: boolean) {
 		members.sort((a: Member, b: Member) => {
 			return a.stat.total_score > b.stat.total_score ? 1 : -1;
 		});
@@ -80,6 +85,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 								<div>{item.stat.case_number}</div>
 								<div>{item.stat.total_score}</div>
 								<div>{this.calculateAvgPoint(item.stat)}</div>
+								{ isMemberRankList && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null }
 							</div>
 						);
 					})
@@ -108,7 +114,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 					<Carousel.Caption>
 						<h3>Member Statistic</h3>
 					</Carousel.Caption>
-					{this.renderMemberStat(allMembers)}
+					{this.renderMemberStat(allMembers, true)}
 				</Carousel.Item>
 			</Carousel>
 		);
