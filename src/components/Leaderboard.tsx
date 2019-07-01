@@ -1,15 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Team } from '../api/LeaderboardData';
+import crown from '../images/icons/crown.png';
 import './Leaderboard.css';
 
 interface Props {
-    title: string,
-    teams: Team[]
+    title: string;
+    teams: Team[];
+    icon: string;
 }
 
 interface State {
-    title: string,
-    teams: Team[]
+    title: string;
+    teams: Team[];
+    icon: string;
 }
 
 export default class Leaderboard extends PureComponent<Props, State> {
@@ -18,29 +21,32 @@ export default class Leaderboard extends PureComponent<Props, State> {
     constructor(props: any) {
         super(props)
 
-        const { title, teams } = props;
+        const { title, teams, icon } = props;
 
         this.state = {
             title: title,
-            teams: teams
+            teams: teams,
+            icon: icon
         };
     }
 
     componentWillReceiveProps(props: any) {
-        const { title, teams } = props;
+        const { title, teams, icon } = props;
 
         this.setState({
             title: title,
-            teams: teams
+            teams: teams,
+            icon: icon
         });
     }
 
     renderLeaderboard(teams: Team[]) {
+        const rankWidth = 30;
         const imgWidth = 100;
         const nameWidth = 150;
         const scoreWidth = 100;
         const barPadding = 10;
-        const totalBarWidth = this.containerWidth - imgWidth - nameWidth - scoreWidth - barPadding * 2;
+        const totalBarWidth = this.containerWidth - rankWidth - imgWidth - nameWidth - scoreWidth - barPadding * 2;
 
         console.log(`total bar width is ${totalBarWidth}`);
 
@@ -54,10 +60,12 @@ export default class Leaderboard extends PureComponent<Props, State> {
 
                     return (
                         <div className='team' key={index}>
-                            <img className='logo' src={item.logo}/>
+                            <div className='rank'>{index + 1}.</div>
+                            <img className='logo' src={item.logo} alt='team logo' />
                             <div className='name'>{item.name}</div>
                             <div className='bar' style={{ width: (item.stat.total_score / maxScore) * totalBarWidth }}></div>
                             <div className='score'>{score}</div>
+                            { index === 0 ?  <img  src={crown} className='crown' alt='winner crown'/> : <div></div> }
                         </div>
                     );
                 }) }                
@@ -66,11 +74,12 @@ export default class Leaderboard extends PureComponent<Props, State> {
     }
 
     render() {
-        const { title, teams } = this.state;
+        const { title, teams, icon } = this.state;
 
         return (
             <div className='Leaderboard'  ref={ node => { if (node) this.containerWidth = node.offsetWidth } }>
                 <div className='title'>
+                    <img src={icon} className="App-logo" alt="theme icon" />
                     <label>{title}</label>
                 </div>
                 <div className='underline'></div>

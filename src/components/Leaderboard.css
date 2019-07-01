@@ -9,14 +9,14 @@
 
 .Leaderboard .title {
   font-size: calc(10px + 4vmin);
-  color: #666;
-  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  font-family: fantasy;
 }
 
 .Leaderboard .underline {
     height: 3px;
     width: 100%;
-    background-color: #666;
+    background-color: #333;
 }
 
 .Leaderboard .content {
@@ -24,6 +24,7 @@
   flex-direction: column;
   justify-content: space-between;
   margin-top: 20px;
+  font-family: fantasy;
 }
 
 .Leaderboard .content .team {
@@ -38,9 +39,14 @@
     width: 150px;
 }
 
+.Leaderboard .content .team .rank {
+    font-size: calc(10px + 2vmin);
+    padding-right: 20px;
+}
+
 .Leaderboard .content .team .logo {
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
 }
 
 .Leaderboard .content .team .bar {
@@ -52,5 +58,26 @@
 
 .Leaderboard .content .team .score {
     font-size: calc(6px + 2vmin);
-    width: 100px;
+    width: 60px;
+}
+
+.Leaderboard .content .team .crown {
+    height: 30px;
+    width: 30px;
+}
+
+.Leaderboard .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 60px;
+    margin-right: 20px;
+    pointer-events: none;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

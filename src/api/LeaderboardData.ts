@@ -20,5 +20,6 @@ export interface Team {
 
 export interface LeaderboardData {
     theme_name: string;
+    theme_icon: string;
     teams: Team[];
 }
