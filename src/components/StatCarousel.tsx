@@ -64,7 +64,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 	renderMemberStat(members: Member[], isMemberRankList: boolean) {
 		members.sort((a: Member, b: Member) => {
-			return a.stat.total_score > b.stat.total_score ? 1 : -1;
+			return a.stat.total_score < b.stat.total_score ? 1 : -1;
 		});
 
 		return (

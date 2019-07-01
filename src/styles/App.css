@@ -44,7 +44,7 @@ html, body, #root {
 
 .DetailPanel {
   width: 600px;
-  background-color: rgba(50, 50, 50, 0.6);
+  background-color: rgba(50, 50, 50, 1);
   position: relative;
   display: flex;
 }
