@@ -32,10 +32,6 @@ export default class StatCarousel extends PureComponent<Props, State> {
 	}
 
 	renderTeamStat(teams: Team[]) {
-		teams.map(t => {
-
-		});
-
 		return (
 			<div className='StatList Team'>
 				{
@@ -85,7 +81,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 								<div>{item.stat.case_number}</div>
 								<div>{item.stat.total_score}</div>
 								<div>{this.calculateAvgPoint(item.stat)}</div>
-								{ isMemberRankList && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null }
+								{isMemberRankList && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null}
 							</div>
 						);
 					})
@@ -98,7 +94,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		let { teams } = this.state;
 		let allMembers: Member[] = [];
 
-		teams.map(t => {
+		teams.forEach(t => {
 			allMembers.push(...t.members);
 		});
 
