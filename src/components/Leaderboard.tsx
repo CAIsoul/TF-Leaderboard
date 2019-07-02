@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Team } from '../api/LeaderboardData';
-import trophy from '../images/icons/trophy.svg';
+import trophy from '../images/icons/trophy.png';
 import './Leaderboard.css';
 
 interface Props {
