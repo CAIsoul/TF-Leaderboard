@@ -80,7 +80,8 @@ export default class Leaderboard extends PureComponent<Props, State> {
             <div className='Leaderboard'  ref={ node => { if (node) this.containerWidth = node.offsetWidth } }>
                 <div className='title'>
                     <img src={icon} className="App-logo" alt="theme icon" />
-                    <label>{title}</label>
+                    <span className='GameTitle'>{title}</span>
+                    <span className='GameHint'>Most Total Points Wins!</span>
                 </div>
                 <div className='underline'></div>
                 <div className='content'>

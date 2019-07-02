@@ -66,6 +66,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		return (
 			<div className='StatList Member'>
 				<div className='MemberStatItem'>
+					{ isMemberRankList ? <div>Rank</div> : null }
 					<div className='NameLabel'>Name</div>
 					<div>Cases</div>
 					<div>Points</div>
@@ -77,6 +78,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 						return (
 							<div className='MemberStatItem' key={index}>
+								{ isMemberRankList ? <div>{index+1}</div> : null }
 								<div className='NameLabel'>{fullName}</div>
 								<div>{item.stat.case_number}</div>
 								<div>{item.stat.total_score}</div>

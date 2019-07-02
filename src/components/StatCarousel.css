@@ -58,7 +58,7 @@
 }
 
 .MemberStatItem > div.NameLabel, .TeamStat > div.NameLabel {
-    flex: 2;
+    flex: 3;
 }
 
 .MemberStatItem .crown {
