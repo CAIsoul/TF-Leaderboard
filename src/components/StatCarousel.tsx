@@ -34,6 +34,36 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		return (stat.total_score / stat.case_number).toFixed(1);
 	}
 
+	getWinningTeamIndex(teams: Team[]) {
+		let max = 0, max_index = 0;;
+		teams.map((team, index) => {
+			if (max < team.stat.total_score) {
+				max = team.stat.total_score;
+				max_index = index;
+			}
+		});
+
+		return max_index;
+	}
+
+	renderTeamCard(team: Team, isWinningTeam: boolean) {
+		return (
+			<div className='TeamStatItem'>
+				<div className='TeamStat'>
+					<div>Cases: {team.stat.case_number }</div>
+					<div>Points: { team.stat.total_score }</div>
+					<div>Avg: { this.calculateAvgPoint(team.stat) }</div>
+				</div>
+				<div className='underline'></div>
+				<div className='TeamMembers'>
+					{
+						this.renderMemberStat(team.members, false, isWinningTeam)
+					}
+				</div>
+			</div>
+		);
+	}
+
 	renderTeamStat(teams: Team[]) {
 		return (
 			<div className='StatList Team'>
@@ -50,7 +80,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 								<div className='underline'></div>
 								<div className='TeamMembers'>
 									{
-										this.renderMemberStat(t.members, false)
+										this.renderMemberStat(t.members, false, false)
 									}
 								</div>
 							</div>
@@ -61,7 +91,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		);
 	}
 
-	renderMemberStat(members: Member[], isMemberRankList: boolean) {
+	renderMemberStat(members: Member[], includeRanking: boolean, isWinningTeam: boolean) {
 		members.sort((a: Member, b: Member) => {
 			return a.stat.total_score < b.stat.total_score ? 1 : -1;
 		});
@@ -69,7 +99,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		return (
 			<div className='StatList Member'>
 				<div className='MemberStatItem'>
-					{ isMemberRankList ? <div>Rank</div> : null }
+					{ includeRanking ? <div>Rank</div> : null }
 					<div className='NameLabel'>Name</div>
 					<div>Cases</div>
 					<div>Points</div>
@@ -81,12 +111,12 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 						return (
 							<div className='MemberStatItem' key={ index }>
-								{ isMemberRankList ? <div>{ index + 1 }</div> : null }
+								{ includeRanking ? <div>{ index + 1 }</div> : null }
 								<div className='NameLabel'>{ fullName }</div>
 								<div>{ item.stat.case_number }</div>
 								<div>{ item.stat.total_score }</div>
 								<div>{ this.calculateAvgPoint(item.stat) }</div>
-								{ isMemberRankList && index === 0 ? <img src={ crown } className='crown' alt='mvp-crown' /> : null }
+								{ isWinningTeam && index === 0 ? <img src={ crown } className='crown' alt='mvp-crown' /> : null }
 							</div>
 						);
 					})
@@ -96,27 +126,25 @@ export default class StatCarousel extends PureComponent<Props, State> {
 	}
 
 	render() {
-		let { teams } = this.state;
-		let allMembers: Member[] = [];
-
-		teams.forEach(t => {
-			allMembers.push(...t.members);
-		});
+		let { teams, interval } = this.state;
+		const best_team_index = this.getWinningTeamIndex(teams);
 
 		return (
-			<Carousel interval={ this.props.interval * 1000 }>
-				<Carousel.Item>
-					<Carousel.Caption>
-						<h3>Team Statistic</h3>
-					</Carousel.Caption>
-					{ this.renderTeamStat(teams) }
-				</Carousel.Item>
-				<Carousel.Item>
-					<Carousel.Caption>
-						<h3>Member Statistic</h3>
-					</Carousel.Caption>
-					{ this.renderMemberStat(allMembers, true) }
-				</Carousel.Item>
+			<Carousel interval={interval * 1000}>
+				{ 
+					teams.map((team, index) => {
+						return (
+							<Carousel.Item>
+								<Carousel.Caption>
+									<h3>{team.name}</h3>
+								</Carousel.Caption>
+									<div className='StatList'>
+										{ this.renderTeamCard(team, best_team_index === index) }
+									</div>
+							</Carousel.Item>
+						)
+					}) 
+				}
 			</Carousel>
 		);
 	}

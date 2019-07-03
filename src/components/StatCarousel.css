@@ -10,6 +10,9 @@
 .carousel-item .carousel-caption {
     top: 30px;
     bottom: auto;
+}
+
+.carousel-item .carousel-caption h3 {
     color: white;
 }
 
