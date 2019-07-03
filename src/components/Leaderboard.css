@@ -66,10 +66,32 @@
 }
 
 .Leaderboard .content .team .bar {
+    position: relative;
+    overflow: hidden;
     height: 40px;
-    background-color: #f32925;
+    width: 0;
+    /* background-image: linear-gradient(to right, #f68933 , red); */
+    background-color: red;
     padding-left: 10px;
     padding-right: 10px;
+    transition: width 500ms;
+}
+
+.Leaderboard .content .team .bar::after {
+    /* content:'';
+    top:0;
+    transform:translateX(100%);
+    width: calc(100% - 20px);
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    animation: slide 2s infinite;
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(0, 0, 51, 0)), color-stop(50%,rgba(246, 137, 51, 0.8)), color-stop(99%,rgba(246, 137, 51, 0)), color-stop(100%,rgba(246, 137, 51, 0))); */
+}
+
+@keyframes slide {
+	0% {transform:translateX(-100%);}
+	100% {transform:translateX(100%);}
 }
 
 .Leaderboard .content .team .score {

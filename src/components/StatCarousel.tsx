@@ -36,7 +36,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 	getWinningTeamIndex(teams: Team[]) {
 		let max = 0, max_index = 0;;
-		teams.map((team, index) => {
+		teams.forEach((team, index) => {
 			if (max < team.stat.total_score) {
 				max = team.stat.total_score;
 				max_index = index;
