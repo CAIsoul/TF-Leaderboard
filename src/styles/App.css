@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -23,12 +25,23 @@ html, body, #root {
   color: white;
 }
 
+.App-header .settings {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  right: 0;
+  background-image: url(../images/settings.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 50px 50px;
+}
+
 .App-link {
   color: #61dafb;
 }
 
 .Content {
-  display: flex; 
+  display: flex;
   flex-direction: row;
   flex: 1;
 }
@@ -48,3 +61,5 @@ html, body, #root {
   position: relative;
   display: flex;
 }
+
+@import '~antd/dist/antd.css'
