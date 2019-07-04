@@ -70,7 +70,7 @@ export default class Header extends PureComponent<Props, State> {
 		const { title } = this.state;
 
 		return (
-			<div className="App-header">
+			<div className="app-header">
 				<label>{title}</label>
 				<label>{currentDate.toLocaleDateString()}</label>
 				<div className="settings" onClick={this.showModal}></div>

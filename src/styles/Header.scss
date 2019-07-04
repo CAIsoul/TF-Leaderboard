@@ -1,3 +1,27 @@
-.App-header>label {
-	padding-right: 20px;
+.app-header {
+	background-color: #f68933;
+	height: 100px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(20px + 2vmin);
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	color: white;
+
+	label {
+		padding-right: 20px;
+	}
+
+	.settings {
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		right: 0;
+		background-image: url(../images/icons/settings.svg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 50px 50px;
+	}
 }

@@ -59,11 +59,11 @@ export default class App extends Component<Props, State> {
 		return (
 			<div className="App">
 				<Header title="TF-Leaderboard" changeCarouselInterval={(interval: number) => this.onCarouselIntervalChanged(interval)}></Header>
-				<div className="Content">
-					<div className="OverviewPanel">
+				<div className="main-content">
+					<div className="overview-panel">
 						<Leaderboard title={theme_name} teams={teams} icon={theme_icon}></Leaderboard>
 					</div>
-					<div className="DetailPanel">
+					<div className="detail-panel">
 						<StatCarousel teams={teams} interval={this.state.carouselInterval}></StatCarousel>
 					</div>
 				</div>
