@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Team } from '../api/LeaderboardData';
 import trophy from '../images/icons/trophy.png';
-import '../styles/Leaderboard.css';
+import '../styles/Leaderboard.scss';
 
 interface Props {
 	title: string;

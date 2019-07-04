@@ -4,7 +4,7 @@ import { fetchData } from './api/FetchData';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
 import StatCarousel from './components/StatCarousel';
-import './styles/App.css';
+import './styles/App.scss';
 
 interface Props {
 

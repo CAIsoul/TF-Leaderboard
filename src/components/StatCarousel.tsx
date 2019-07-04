@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { Carousel } from 'react-bootstrap';
 import { Team, Member, Stat } from '../api/LeaderboardData';
 import crown from '../images/icons/crown.png';
-import '../styles/StatCarousel.css';
+import '../styles/StatCarousel.scss';
 
 interface Props {
 	teams: Team[];

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import '../styles/Header.css';
+import '../styles/Header.scss';
 import { Modal, Slider, InputNumber, Row, Col } from 'antd';
 
 interface Props {
