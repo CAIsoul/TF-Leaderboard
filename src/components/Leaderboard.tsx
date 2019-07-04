@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Team } from '../api/LeaderboardData';
 import trophy from '../images/icons/trophy.png';
-import './Leaderboard.css';
+import '../styles/Leaderboard.css';
 
 interface Props {
 	title: string;
@@ -50,12 +50,12 @@ export default class Leaderboard extends PureComponent<Props, State> {
 
 		console.log(`total bar width is ${totalBarWidth}`);
 
-		let scroeList = teams.map(o => o.stat.total_score); 
+		let scroeList = teams.map(o => o.stat.total_score);
 		const maxScore = Math.max(...scroeList);
 
 		return (
 			<div className='content'>
-				{ teams.map((item, index) => {
+				{teams.map((item, index) => {
 					const score = item.stat.total_score;
 
 					return (
@@ -65,10 +65,10 @@ export default class Leaderboard extends PureComponent<Props, State> {
 							<div className='name'>{item.name}</div>
 							<div className='bar' style={{ width: (item.stat.total_score / maxScore) * totalBarWidth }}></div>
 							<div className='score'>{score}</div>
-							{ index === 0 ?  <img  src={trophy} className='trophy' alt='winner trophy'/> : <div></div> }
+							{index === 0 ? <img src={trophy} className='trophy' alt='winner trophy' /> : <div></div>}
 						</div>
 					);
-				}) }                
+				})}
 			</div>
 		);
 	}
@@ -77,7 +77,7 @@ export default class Leaderboard extends PureComponent<Props, State> {
 		const { title, teams, icon } = this.state;
 
 		return (
-			<div className='Leaderboard'  ref={ node => { if (node) this.containerWidth = node.offsetWidth } }>
+			<div className='Leaderboard' ref={node => { if (node) this.containerWidth = node.offsetWidth }}>
 				<div className='title'>
 					<img src={icon} className="App-logo" alt="theme icon" />
 					<span className='GameTitle'>{title}</span>
@@ -85,7 +85,7 @@ export default class Leaderboard extends PureComponent<Props, State> {
 				</div>
 				<div className='underline'></div>
 				<div className='content'>
-					{ this.renderLeaderboard(teams) }
+					{this.renderLeaderboard(teams)}
 				</div>
 			</div>
 		);

@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { Carousel } from 'react-bootstrap';
 import { Team, Member, Stat } from '../api/LeaderboardData';
 import crown from '../images/icons/crown.png';
-import './StatCarousel.css';
+import '../styles/StatCarousel.css';
 
 interface Props {
 	teams: Team[];
@@ -15,7 +15,7 @@ interface State {
 }
 
 export default class StatCarousel extends PureComponent<Props, State> {
-	constructor (props: any) {
+	constructor(props: any) {
 		super(props);
 
 		this.state = {
@@ -50,9 +50,9 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		return (
 			<div className='TeamStatItem'>
 				<div className='TeamStat'>
-					<div>Cases: {team.stat.case_number }</div>
-					<div>Points: { team.stat.total_score }</div>
-					<div>Avg: { this.calculateAvgPoint(team.stat) }</div>
+					<div>Cases: {team.stat.case_number}</div>
+					<div>Points: {team.stat.total_score}</div>
+					<div>Avg: {this.calculateAvgPoint(team.stat)}</div>
 				</div>
 				<div className='underline'></div>
 				<div className='TeamMembers'>
@@ -70,12 +70,12 @@ export default class StatCarousel extends PureComponent<Props, State> {
 				{
 					teams.map((t, index) => {
 						return (
-							<div key={ index } className='TeamStatItem'>
-								<div className='TeamName'>{ t.name }</div>
+							<div key={index} className='TeamStatItem'>
+								<div className='TeamName'>{t.name}</div>
 								<div className='TeamStat'>
-									<div>Cases: { t.stat.case_number }</div>
-									<div>Points: { t.stat.total_score }</div>
-									<div>Avg: { this.calculateAvgPoint(t.stat) }</div>
+									<div>Cases: {t.stat.case_number}</div>
+									<div>Points: {t.stat.total_score}</div>
+									<div>Avg: {this.calculateAvgPoint(t.stat)}</div>
 								</div>
 								<div className='underline'></div>
 								<div className='TeamMembers'>
@@ -99,7 +99,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		return (
 			<div className='StatList Member'>
 				<div className='MemberStatItem'>
-					{ includeRanking ? <div>Rank</div> : null }
+					{includeRanking ? <div>Rank</div> : null}
 					<div className='NameLabel'>Name</div>
 					<div>Cases</div>
 					<div>Points</div>
@@ -110,13 +110,13 @@ export default class StatCarousel extends PureComponent<Props, State> {
 						const fullName = `${item.first_name} ${item.last_name}`;
 
 						return (
-							<div className='MemberStatItem' key={ index }>
-								{ includeRanking ? <div>{ index + 1 }</div> : null }
-								<div className='NameLabel'>{ fullName }</div>
-								<div>{ item.stat.case_number }</div>
-								<div>{ item.stat.total_score }</div>
-								<div>{ this.calculateAvgPoint(item.stat) }</div>
-								{ isWinningTeam && index === 0 ? <img src={ crown } className='crown' alt='mvp-crown' /> : null }
+							<div className='MemberStatItem' key={index}>
+								{includeRanking ? <div>{index + 1}</div> : null}
+								<div className='NameLabel'>{fullName}</div>
+								<div>{item.stat.case_number}</div>
+								<div>{item.stat.total_score}</div>
+								<div>{this.calculateAvgPoint(item.stat)}</div>
+								{isWinningTeam && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null}
 							</div>
 						);
 					})
@@ -131,19 +131,19 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 		return (
 			<Carousel interval={interval * 1000}>
-				{ 
+				{
 					teams.map((team, index) => {
 						return (
-							<Carousel.Item>
+							<Carousel.Item key={team.name}>
 								<Carousel.Caption>
 									<h3>{team.name}</h3>
 								</Carousel.Caption>
-									<div className='StatList'>
-										{ this.renderTeamCard(team, best_team_index === index) }
-									</div>
+								<div className='StatList'>
+									{this.renderTeamCard(team, best_team_index === index)}
+								</div>
 							</Carousel.Item>
 						)
-					}) 
+					})
 				}
 			</Carousel>
 		);
