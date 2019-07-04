@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
+import { Modal, Slider, InputNumber } from 'antd';
 import '../styles/Header.scss';
-import { Modal, Slider, InputNumber, Row, Col } from 'antd';
+
 
 interface Props {
 	title: string;
@@ -26,11 +27,6 @@ export default class Header extends PureComponent<Props, State> {
 			settingsVisible: false,
 			interval: 30
 		};
-
-		this.showModal = this.showModal.bind(this);
-		this.handleOk = this.handleOk.bind(this);
-		this.handleCancel = this.handleCancel.bind(this);
-		this.onChange = this.onChange.bind(this);
 	}
 
 	componentWillReceiveProps(props: any) {
@@ -39,13 +35,13 @@ export default class Header extends PureComponent<Props, State> {
 		});
 	}
 
-	showModal() {
+	showModal = () => {
 		this.setState({
 			settingsVisible: true,
 		});
 	}
 
-	handleOk() {
+	handleOk = () => {
 		this.setState({
 			settingsVisible: false,
 		});
@@ -53,41 +49,36 @@ export default class Header extends PureComponent<Props, State> {
 		this.props.changeCarouselInterval(this.state.interval);
 	}
 
-	handleCancel() {
+	handleCancel = () => {
 		this.setState({
 			settingsVisible: false,
 		});
 	}
 
-	onChange(value: any) {
+	onChange = (value: any) => {
 		this.setState({
 			interval: value
 		});
 	}
 
 	render() {
-		const currentDate = new Date();
 		const { title } = this.state;
 
 		return (
 			<div className="app-header">
 				<label>{title}</label>
-				<label>{currentDate.toLocaleDateString()}</label>
+				<label>{new Date().toLocaleDateString()}</label>
 				<div className="settings" onClick={this.showModal}></div>
 				<Modal
 					visible={this.state.settingsVisible}
 					onOk={this.handleOk}
-					onCancel={this.handleCancel}>
-					<Row>
-						<Col span={12}>
-							<Slider min={1} max={100} onChange={this.onChange} value={this.state.interval} />
-						</Col>
-						<Col span={4}>
-							<InputNumber min={1} max={100} style={{ marginLeft: '16px' }}
-								value={this.state.interval} onChange={this.onChange}
-							/>
-						</Col>
-					</Row>
+					onCancel={this.handleCancel}
+					title="Setting Refresh Interval">
+					<div className="interval-modal-content-wrapper">
+						<div className="slider-wrapper"><Slider min={1} max={100} onChange={this.onChange} value={this.state.interval} /></div>
+						<div className="input-wrapper"><InputNumber min={1} max={100} value={this.state.interval} onChange={this.onChange} /></div>
+					</div>
+
 				</Modal>
 			</div>
 		);

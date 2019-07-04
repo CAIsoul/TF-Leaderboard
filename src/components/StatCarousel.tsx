@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Carousel } from 'react-bootstrap';
+import { Carousel } from 'antd';
 import { Team, Member, Stat } from '../api/LeaderboardData';
 import crown from '../images/icons/crown.png';
 import '../styles/StatCarousel.scss';
@@ -48,19 +48,18 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 	renderTeamCard(team: Team, isWinningTeam: boolean) {
 		return (
-			<div className='team'>
+			<React.Fragment>
 				<div className='team-summary'>
 					<div>Cases: {team.stat.case_number}</div>
 					<div>Points: {team.stat.total_score}</div>
 					<div>Avg: {this.calculateAvgPoint(team.stat)}</div>
 				</div>
-				<div className='underline'></div>
 				<div>
 					{
 						this.renderMemberStat(team.members, false, isWinningTeam)
 					}
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 
@@ -71,7 +70,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 		return (
 			<div className='member-list'>
-				<div className='member-item'>
+				<div className='member list-header'>
 					{includeRanking ? <div>Rank</div> : null}
 					<div className='name'>Name</div>
 					<div>Cases</div>
@@ -83,7 +82,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 						const fullName = `${item.first_name} ${item.last_name}`;
 
 						return (
-							<div className='member-item' key={index}>
+							<div className='member' key={index}>
 								{includeRanking ? <div>{index + 1}</div> : null}
 								<div className='name'>{fullName}</div>
 								<div>{item.stat.case_number}</div>
@@ -103,20 +102,15 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		const best_team_index = this.getWinningTeamIndex(teams);
 
 		return (
-			<Carousel interval={interval * 1000000}>
+			<Carousel className="carousel" autoplay autoplaySpeed={interval * 1000} dotPosition="top">
 				{
-					teams.map((team, index) => {
-						return (
-							<Carousel.Item key={team.name}>
-								<Carousel.Caption>
-									<h3>{team.name}</h3>
-								</Carousel.Caption>
-								{this.renderTeamCard(team, best_team_index === index)}
-							</Carousel.Item>
-						)
-					})
+					teams.map((team, index) =>
+						<div className="team" key={team.name}>
+							<h3>{team.name}</h3>
+							{this.renderTeamCard(team, best_team_index === index)}
+						</div>
+					)
 				}
-			</Carousel>
-		);
+			</Carousel>);
 	}
 }
