@@ -24,7 +24,7 @@ export default class App extends Component<Props, State> {
 			theme_name: "",
 			theme_icon: "",
 			teams: [],
-			carouselInterval: 30
+			carouselInterval: 3
 		};
 	}
 
@@ -39,26 +39,19 @@ export default class App extends Component<Props, State> {
 	}
 
 	freshLeaderboard(data: LeaderboardData) {
-		const { theme_name, teams, theme_icon } = data;
-		this.setState({
-			theme_name: theme_name,
-			theme_icon: theme_icon,
-			teams: teams
-		});
+		this.setState({ ...data });
 	}
 
-	onCarouselIntervalChanged(interval: number) {
-		this.setState({
-			carouselInterval: interval
-		})
+	onCarouselIntervalChanged = (interval: number) => {
+		this.setState({ carouselInterval: interval });
 	}
 
 	render() {
-		let { theme_name, theme_icon, teams } = this.state;
+		let { theme_name, theme_icon, teams, carouselInterval: interval } = this.state;
 
 		return (
 			<div className="App">
-				<Header title="TF-Leaderboard" changeCarouselInterval={(interval: number) => this.onCarouselIntervalChanged(interval)}></Header>
+				<Header title="TF-Leaderboard" changeCarouselInterval={this.onCarouselIntervalChanged} interval={interval}></Header>
 				<div className="main-content">
 					<div className="overview-panel">
 						<Leaderboard title={theme_name} teams={teams} icon={theme_icon}></Leaderboard>

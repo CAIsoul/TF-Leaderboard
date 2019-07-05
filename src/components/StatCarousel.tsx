@@ -18,15 +18,13 @@ export default class StatCarousel extends PureComponent<Props, State> {
 	constructor(props: any) {
 		super(props);
 
-		this.state = {
-			teams: props.teams,
-			interval: props.interval
-		}
+		this.state = { ...props };
 	}
 
 	componentWillReceiveProps(props: any) {
 		this.setState({
-			teams: props.teams
+			teams: props.teams,
+			interval: props.interval
 		});
 	}
 
@@ -35,15 +33,8 @@ export default class StatCarousel extends PureComponent<Props, State> {
 	}
 
 	getWinningTeamIndex(teams: Team[]) {
-		let max = 0, max_index = 0;;
-		teams.forEach((team, index) => {
-			if (max < team.stat.total_score) {
-				max = team.stat.total_score;
-				max_index = index;
-			}
-		});
-
-		return max_index;
+		let max = Math.max(...teams.map(t => t.stat.total_score || 0));
+		return teams.findIndex(t => t.stat.total_score === max);
 	}
 
 	renderTeamCard(team: Team, isWinningTeam: boolean) {
@@ -114,3 +105,17 @@ export default class StatCarousel extends PureComponent<Props, State> {
 			</Carousel>);
 	}
 }
+
+/*
+function intervalValidatorGenerator() {
+	let prevTimeStamp: number;
+	return function () {
+		if (!prevTimeStamp) {
+			prevTimeStamp = Date.now();
+			return;
+		}
+		console.log(Date.now() - prevTimeStamp);
+		prevTimeStamp = Date.now();
+	}
+}
+*/

@@ -20,13 +20,7 @@ export default class Header extends PureComponent<Props, State> {
 	constructor(props: any) {
 		super(props);
 
-		let { title } = props;
-
-		this.state = {
-			title: title,
-			settingsVisible: false,
-			interval: 30
-		};
+		this.state = Object.assign({}, props, { settingsVisible: false });
 	}
 
 	componentWillReceiveProps(props: any) {
@@ -75,8 +69,8 @@ export default class Header extends PureComponent<Props, State> {
 					onCancel={this.handleCancel}
 					title="Setting Refresh Interval">
 					<div className="interval-modal-content-wrapper">
-						<div className="slider-wrapper"><Slider min={1} max={100} onChange={this.onChange} value={this.state.interval} /></div>
-						<div className="input-wrapper"><InputNumber min={1} max={100} value={this.state.interval} onChange={this.onChange} /></div>
+						<div className="slider-wrapper"><Slider min={1} max={30} onChange={this.onChange} value={this.state.interval} /></div>
+						<div className="input-wrapper"><InputNumber min={1} max={30} value={this.state.interval} onChange={this.onChange} /></div>
 					</div>
 
 				</Modal>
