@@ -2,6 +2,8 @@ import { LeaderboardData } from './LeaderboardData';
 import redsox from '../images/theme-baseball/red-sox.png';
 import yankees from '../images/theme-baseball/yankees.png';
 import themeIcon from '../images/theme-baseball/theme-icon.png';
+import { intervalValidatorGenerator } from "../utils";
+
 /**
  * TODO: User should config theme associated resources.
  * The theme name may be the indentifier.
@@ -127,6 +129,9 @@ let mock_data: LeaderboardData = {
 	]
 };
 
+let validator = intervalValidatorGenerator();
+
 export function fetchData() {
+	validator();
 	return Promise.resolve(mock_data);
 }

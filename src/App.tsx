@@ -18,8 +18,10 @@ interface State {
 }
 
 export default class App extends Component<Props, State> {
+	timerId: NodeJS.Timeout | null;
 	constructor(props: object) {
 		super(props);
+		this.timerId = null;
 		this.state = {
 			theme_name: "",
 			theme_icon: "",
@@ -29,11 +31,18 @@ export default class App extends Component<Props, State> {
 	}
 
 	componentWillMount() {
-		this.readLeaderboardData();
+		const { carouselInterval: interval } = this.state;
+		this.readLeaderboardData().then(() => {
+			this.setTimer(interval);
+		});
+	}
+
+	componentWillUnmount() {
+		this.clearTimer();
 	}
 
 	readLeaderboardData() {
-		fetchData().then((res: LeaderboardData) => {
+		return fetchData().then((res: LeaderboardData) => {
 			this.freshLeaderboard(res);
 		});
 	}
@@ -43,7 +52,20 @@ export default class App extends Component<Props, State> {
 	}
 
 	onCarouselIntervalChanged = (interval: number) => {
+		if (interval === this.state.carouselInterval) return;
 		this.setState({ carouselInterval: interval });
+		this.setTimer(interval);
+	}
+
+	clearTimer() {
+		if (this.timerId !== null) {
+			clearInterval(this.timerId);
+		}
+	}
+
+	setTimer(interval: number) {
+		this.clearTimer();
+		this.timerId = setInterval(this.readLeaderboardData.bind(this), interval * 1000);
 	}
 
 	render() {
