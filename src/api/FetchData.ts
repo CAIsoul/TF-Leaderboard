@@ -3,135 +3,121 @@ import redsox from '../images/theme-baseball/red-sox.png';
 import yankees from '../images/theme-baseball/yankees.png';
 import themeIcon from '../images/theme-baseball/theme-icon.png';
 import { intervalValidatorGenerator } from "../utils";
+import { func } from 'prop-types';
 
 /**
  * TODO: User should config theme associated resources.
  * The theme name may be the indentifier.
  */
-let themeName = "baseball";
+// const baseUrl = 'http://184.73.190.18/TF-Leaderboard-API/tf-leaderboard/';
+const baseUrl = 'http://localhost/TF-Leaderboard-API/tf-leaderboard/';
+const templateId = 1;
 
-let mock_data: LeaderboardData = {
-	theme_name: themeName,
-	theme_icon: themeIcon,
-	teams: [
-		{
-			name: 'Yankees',
-			color: '#004685',
-			logo: yankees,
-			stat: {
-				case_number: 38,
-				total_score: 103
-			},
-			members: [
-				{
-					first_name: 'Aaron',
-					last_name: 'Juddge',
-					picutre: '',
-					stat: {
-						case_number: 8,
-						total_score: 24
-					}
-				},
-				{
-					first_name: 'Giancarlo',
-					last_name: 'Stanton',
-					picutre: '',
-					stat: {
-						case_number: 10,
-						total_score: 25
-					}
-				},
-				{
-					first_name: 'Masahiro',
-					last_name: 'Tanaka',
-					picutre: '',
-					stat: {
-						case_number: 6,
-						total_score: 16
-					}
-				},
-				{
-					first_name: 'Luke',
-					last_name: 'Voit',
-					picutre: '',
-					stat: {
-						case_number: 8,
-						total_score: 18
-					}
-				},
-				{
-					first_name: 'Gio',
-					last_name: 'Urshela',
-					picutre: '',
-					stat: {
-						case_number: 6,
-						total_score: 20
-					}
-				}
-			]
-		},
-		{
-			name: 'Red Sox',
-			color: '#ec174b',
-			logo: redsox,
-			stat: {
-				case_number: 25,
-				total_score: 70
-			},
-			members: [
-				{
-					first_name: 'Chris',
-					last_name: 'Sale',
-					picutre: '',
-					stat: {
-						case_number: 6,
-						total_score: 15
-					}
-				},
-				{
-					first_name: 'Mookie',
-					last_name: 'Betts',
-					picutre: '',
-					stat: {
-						case_number: 4,
-						total_score: 12
-					}
-				},
-				{
-					first_name: 'Dustin',
-					last_name: 'Pedroia',
-					picutre: '',
-					stat: {
-						case_number: 6,
-						total_score: 20
-					}
-				},
-				{
-					first_name: 'Michael',
-					last_name: 'Chavis',
-					picutre: '',
-					stat: {
-						case_number: 3,
-						total_score: 10
-					}
-				},
-				{
-					first_name: 'David',
-					last_name: 'Price',
-					picutre: '',
-					stat: {
-						case_number: 6,
-						total_score: 13
-					}
-				}
-			]
-		}
-	]
-};
+// let mock_data: LeaderboardData = {
+// 	name: "baseball",
+// 	icon: themeIcon,
+// 	teams: [
+// 		{
+// 			name: 'Yankees',
+// 			color: '#004685',
+// 			logo: yankees,
+// 			case_number: 38,
+// 			total_point: 103,
+// 			members: [
+// 				{
+// 					name: 'Aaron Juddge',
+// 					picutre: '',
+// 					case_number: 8,
+// 					total_point: 24
+// 				},
+// 				{
+// 					name: 'Giancarlo Stanton',
+// 					picutre: '',
+// 					case_number: 10,
+// 					total_point: 25
+// 				},
+// 				{
+// 					name: 'Masahiro Tanaka',
+// 					picutre: '',
+// 					case_number: 6,
+// 					total_point: 16
+// 				},
+// 				{
+// 					name: 'Luke Voit',
+// 					picutre: '',
+// 					case_number: 8,
+// 					total_point: 18
+// 				},
+// 				{
+// 					name: 'Gio Urshela',
+// 					picutre: '',
+// 					case_number: 6,
+// 					total_point: 20
+// 				}
+// 			]
+// 		},
+// 		{
+// 			name: 'Red Sox',
+// 			color: '#ec174b',
+// 			logo: redsox,
+// 			case_number: 25,
+// 			total_point: 70,
+// 			members: [
+// 				{
+// 					name: 'Chris Sale',
+// 					picutre: '',
+// 					case_number: 6,
+// 					total_point: 15
+// 				},
+// 				{
+// 					name: 'Mookie Betts',
+// 					picutre: '',
+// 					case_number: 4,
+// 					total_point: 12
+// 				},
+// 				{
+// 					name: 'Dustin Pedroia',
+// 					picutre: '',
+// 					case_number: 6,
+// 					total_point: 20
+// 				},
+// 				{
+// 					name: 'Michael Chavis',
+// 					picutre: '',
+// 					case_number: 3,
+// 					total_point: 10
+// 				},
+// 				{
+// 					name: 'David Price',
+// 					picutre: '',
+// 					case_number: 6,
+// 					total_point: 13
+// 				}
+// 			]
+// 		}
+// 	]
+// };
 
-let validator = intervalValidatorGenerator();
+export function fetchTemplateSetting() {
+	return fetch(`${baseUrl}template/${templateId}`)
+		.then(res => res.json())
+		.then(res => {
+			return res;
+		});
+}
 
-export function fetchData() {
-	validator();
-	return Promise.resolve(mock_data);
+export function fetchCaseData() {
+	return fetch(`${baseUrl}casedata`)
+		.then(res => res.json())
+		.then(res => {
+			return res;
+		});
+}
+
+export function fetchImages() {
+	return fetch(`${baseUrl}getimages/${templateId}`)
+		.then(res => res.json())
+		.then(res => {
+			return res;
+		});
 }

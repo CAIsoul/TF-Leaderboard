@@ -1,25 +1,22 @@
-export interface Stat {
-	case_number: number;
-	total_score: number;
-}
-
 export interface Member {
-	first_name: string;
-	last_name: string;
+	name: string;
 	picutre: string;
-	stat: Stat;
+	total_point: number;
+	case_number: number;
+	id: string;
 }
 
 export interface Team {
 	name: string;
-	stat: Stat;
 	logo: string;
 	color: string;
+	total_point: number;
+	case_number: number;
 	members: Member[];
 }
 
 export interface LeaderboardData {
-	theme_name: string;
-	theme_icon: string;
+	name: string;
+	icon: string;
 	teams: Team[];
 }

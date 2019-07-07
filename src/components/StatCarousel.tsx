@@ -1,6 +1,6 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import { Carousel } from 'antd';
-import { Team, Member, Stat } from '../api/LeaderboardData';
+import { Team, Member } from '../api/LeaderboardData';
 import crown from '../images/icons/crown.png';
 import '../styles/StatCarousel.scss';
 
@@ -14,7 +14,7 @@ interface State {
 	interval: number;
 }
 
-export default class StatCarousel extends PureComponent<Props, State> {
+export default class StatCarousel extends Component<Props, State> {
 	constructor(props: any) {
 		super(props);
 
@@ -28,22 +28,29 @@ export default class StatCarousel extends PureComponent<Props, State> {
 		});
 	}
 
-	calculateAvgPoint(stat: Stat) {
-		return (stat.total_score / stat.case_number).toFixed(1);
+	calculateAvgPoint(item: any) {
+		return (item.total_point / item.case_number).toFixed(1);
 	}
 
 	getWinningTeamIndex(teams: Team[]) {
-		let max = Math.max(...teams.map(t => t.stat.total_score || 0));
-		return teams.findIndex(t => t.stat.total_score === max);
+		let max = 0, max_index = 0;;
+		teams.forEach((team, index) => {
+			if (max < team.total_point) {
+				max = team.total_point;
+				max_index = index;
+			}
+		});
+
+		return max_index;
 	}
 
 	renderTeamCard(team: Team, isWinningTeam: boolean) {
 		return (
 			<React.Fragment>
 				<div className='team-summary'>
-					<div>Cases: {team.stat.case_number}</div>
-					<div>Points: {team.stat.total_score}</div>
-					<div>Avg: {this.calculateAvgPoint(team.stat)}</div>
+					<div>Cases: {team.case_number}</div>
+					<div>Points: {team.total_point}</div>
+					<div>Avg: {this.calculateAvgPoint(team)}</div>
 				</div>
 				<div>
 					{
@@ -56,7 +63,7 @@ export default class StatCarousel extends PureComponent<Props, State> {
 
 	renderMemberStat(members: Member[], includeRanking: boolean, isWinningTeam: boolean) {
 		members.sort((a: Member, b: Member) => {
-			return a.stat.total_score < b.stat.total_score ? 1 : -1;
+			return a.total_point < b.total_point ? 1 : -1;
 		});
 
 		return (
@@ -70,15 +77,15 @@ export default class StatCarousel extends PureComponent<Props, State> {
 				</div>
 				{
 					members.map((item, index) => {
-						const fullName = `${item.first_name} ${item.last_name}`;
+						const fullName = `${item.name}`;
 
 						return (
 							<div className='member' key={index}>
 								{includeRanking ? <div>{index + 1}</div> : null}
 								<div className='name'>{fullName}</div>
-								<div>{item.stat.case_number}</div>
-								<div>{item.stat.total_score}</div>
-								<div>{this.calculateAvgPoint(item.stat)}</div>
+								<div>{item.case_number}</div>
+								<div>{item.total_point}</div>
+								<div>{this.calculateAvgPoint(item)}</div>
 								{isWinningTeam && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null}
 							</div>
 						);
