@@ -6,8 +6,8 @@ import '../styles/Header.scss';
 interface Props {
 	title: string;
 	settingsVisible?: boolean;
-	interval?: number;
-	changeCarouselInterval: Function;
+	interval: number;
+	onSettingsUpdate: Function;
 }
 
 interface State {
@@ -16,11 +16,15 @@ interface State {
 	interval: number;
 }
 
+
 export default class Header extends PureComponent<Props, State> {
 	constructor(props: any) {
 		super(props);
 
-		this.state = Object.assign({}, props, { settingsVisible: false });
+
+		this.state = Object.assign({}, props, {
+			settingsVisible: false
+		});
 	}
 
 	componentWillReceiveProps(props: any) {
@@ -36,17 +40,23 @@ export default class Header extends PureComponent<Props, State> {
 	}
 
 	handleOk = () => {
-		this.setState({
+		let { title, interval } = this.state;
 
-			settingsVisible: false,
+		this.setState({ settingsVisible: false });
+
+		this.props.onSettingsUpdate({
+			title: title,
+			interval: interval
 		});
-
-		this.props.changeCarouselInterval(this.state.interval);
 	}
 
 	handleCancel = () => {
+		let { title, interval } = this.props;
+
 		this.setState({
 			settingsVisible: false,
+			title: title,
+			interval: interval
 		});
 	}
 
@@ -56,9 +66,9 @@ export default class Header extends PureComponent<Props, State> {
 		});
 	}
 
-	onTitleChange = (value: any) => {
+	onTitleChange = (evt: any) => {
 		this.setState({
-			title: value
+			title: evt.target.value
 		});
 	}
 
@@ -75,13 +85,13 @@ export default class Header extends PureComponent<Props, State> {
 					onOk={this.handleOk}
 					onCancel={this.handleCancel}
 					title="Setting Refresh Interval">
-					<div>Board Title</div>
-					<div className="interval-modal-content-wrapper">
+					<div className="input-title">Leaderboard Title</div>
+					<div className="title-modal-content-wrapper">
 						<div className="input-wrapper">
-							<Input value={title} />
+							<Input type='primary' value={title} onChange={this.onTitleChange} />
 						</div>
 					</div>
-					<div>Caoursel Interval (second)</div>
+					<div className="input-title">Caoursel Interval (second)</div>
 					<div className="interval-modal-content-wrapper">
 						<div className="slider-wrapper"><Slider min={1} max={30} onChange={this.onIntervalChange} value={interval} /></div>
 						<div className="input-wrapper"><InputNumber min={1} max={30} value={interval} onChange={this.onIntervalChange} /></div>

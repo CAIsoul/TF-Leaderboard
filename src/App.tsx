@@ -11,6 +11,7 @@ interface Props {
 }
 
 interface State {
+	title: string;
 	template_name: string;
 	template_icon: string;
 	teams: Team[];
@@ -18,16 +19,27 @@ interface State {
 	refreshInterval: number;
 }
 
+const DEFAULT_TITLE = "Client Services - Summer: Week One";
+const DEFAULT_CAROUSEL_INTERVAL = 15;
+
 export default class App extends Component<Props, State> {
-	timerId: NodeJS.Timeout | null;
+	private timerId: NodeJS.Timeout | null;
+	private carouselIntervalStorageKey: string = "setting-carousel-interval";
+	private titleStorageKey: string = "setting-leaderboard-title";
+
 	constructor(props: object) {
 		super(props);
 		this.timerId = null;
+
+		const title = localStorage.getItem(this.titleStorageKey) || DEFAULT_TITLE;
+		const carouselInterval = localStorage.getItem(this.carouselIntervalStorageKey) || DEFAULT_CAROUSEL_INTERVAL;
+
 		this.state = {
+			title: title,
 			template_name: "",
 			template_icon: "",
 			teams: [],
-			carouselInterval: 15,
+			carouselInterval: +carouselInterval,
 			refreshInterval: 30
 		};
 	}
@@ -104,10 +116,21 @@ export default class App extends Component<Props, State> {
 		}, refreshInterval * 1000);
 	}
 
-	onCarouselIntervalChanged = (interval: number) => {
-		if (interval === this.state.carouselInterval) return;
-		this.setState({ carouselInterval: interval });
+	onSettingsUpdate = (settings: any) => {
+		let { carouselInterval, title } = this.state;
+
+		if (settings.interval === carouselInterval
+			&& settings.title === title) return;
+
+		this.setState({
+			carouselInterval: settings.interval,
+			title: settings.title
+		});
+
 		this.setTimer();
+
+		localStorage.setItem(this.carouselIntervalStorageKey, settings.interval.toString());
+		localStorage.setItem(this.titleStorageKey, settings.title.toString());
 	}
 
 	clearTimer() {
@@ -121,12 +144,12 @@ export default class App extends Component<Props, State> {
 	}
 
 	render() {
-		let { template_name, template_icon, teams, carouselInterval: interval } = this.state;
+		let { title, template_name, template_icon, teams, carouselInterval: interval } = this.state;
 
 		return (
 			<div className="App">
-				<Header title="Client Services - Summer: Week One"
-					changeCarouselInterval={this.onCarouselIntervalChanged}
+				<Header title={title}
+					onSettingsUpdate={this.onSettingsUpdate}
 					interval={interval}
 				/>
 				<div className="main-content">

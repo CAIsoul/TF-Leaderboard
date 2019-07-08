@@ -28,18 +28,26 @@
 	}
 }
 
+.input-title {
+	font-weight: bold;
+	padding-bottom: 10px;
+}
+
+.title-modal-content-wrapper {
+	margin-bottom: 20px;
+}
+
 .interval-modal-content-wrapper {
 	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
 
 	.slider-wrapper {
-		width: calc(80% - 16px);
-		padding-left: 8px;
-		margin-right: 16px;
-		float: left;
+		flex: 1;
 	}
 
 	.input-wrapper {
-		width: 20%;
-		float: right;
+		width: 90px;
 	}
 }

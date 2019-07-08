@@ -27,14 +27,17 @@ export default class Leaderboard extends Component<Props, State> {
 	}
 
 	renderLeaderboard(teams: Team[]) {
-		const maxScore = Math.max(...teams.map(o => o.total_point));
 		teams.sort((a, b) => a.total_point > b.total_point ? -1 : 1);
+
+		const maxScore = Math.max(...teams.map(o => o.total_point));
+		const winnderCount = teams.filter(o => o.total_point >= maxScore).length;
 
 		return (
 			<div className='content'>
 				{
 					teams.map((item, index) => {
 						const { name, logo, total_point } = item;
+						const barWidth = total_point === 0 ? 0 : `${100 * total_point / maxScore}%`;
 
 						return (
 							<div className='team' key={index}>
@@ -44,10 +47,10 @@ export default class Leaderboard extends Component<Props, State> {
 								}
 								<div className='name'>{name}</div>
 								<div className="bar-container">
-									<div className='bar' style={{ width: `${100 * total_point / maxScore}%` }}></div>
+									<div className='bar' style={{ width: barWidth }}></div>
 								</div>
 								<div className='score'>{total_point}</div>
-								{index === 0 ? <img src={trophy} className='trophy' alt='winner trophy' /> : <div></div>}
+								{(winnderCount === 1 && index === 0) ? <img src={trophy} className='trophy' alt='winner trophy' /> : <div></div>}
 							</div>
 						);
 					})

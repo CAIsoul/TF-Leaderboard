@@ -15,6 +15,8 @@ interface State {
 }
 
 export default class StatCarousel extends Component<Props, State> {
+	private mvp_owner_ids: string[] = [];
+
 	constructor(props: any) {
 		super(props);
 
@@ -34,19 +36,7 @@ export default class StatCarousel extends Component<Props, State> {
 		return value.toFixed(1);
 	}
 
-	getWinningTeamIndex(teams: Team[]) {
-		let max = 0, max_index = 0;;
-		teams.forEach((team, index) => {
-			if (max < team.total_point) {
-				max = team.total_point;
-				max_index = index;
-			}
-		});
-
-		return max_index;
-	}
-
-	renderTeamCard(team: Team, isWinningTeam: boolean) {
+	renderTeamCard(team: Team) {
 		return (
 			<React.Fragment>
 				<div className='team-summary'>
@@ -56,18 +46,18 @@ export default class StatCarousel extends Component<Props, State> {
 				</div>
 				<div>
 					{
-						this.renderMemberStat(team.members, false, isWinningTeam)
+						this.renderMemberStat(team.members, false)
 					}
 				</div>
 			</React.Fragment>
 		);
 	}
 
-	renderMemberStat(members: Member[], includeRanking: boolean, isWinningTeam: boolean) {
+	renderMemberStat(members: Member[], includeRanking: boolean) {
 		members.sort((a: Member, b: Member) => {
 			if (a.total_point === b.total_point) {
 				if (a.case_number === b.case_number) {
-					return a.name < b.name ? 1 : -1;
+					return a.name > b.name ? 1 : -1;
 				}
 
 				return a.case_number < b.case_number ? 1 : -1;
@@ -96,7 +86,7 @@ export default class StatCarousel extends Component<Props, State> {
 								<div>{item.case_number}</div>
 								<div>{item.total_point}</div>
 								<div>{this.calculateAvgPoint(item)}</div>
-								{isWinningTeam && index === 0 ? <img src={crown} className='crown' alt='mvp-crown' /> : null}
+								{this.mvp_owner_ids.indexOf(item.id) > -1 ? <img src={crown} className='crown' alt='mvp-crown' /> : null}
 							</div>
 						);
 					})
@@ -105,17 +95,55 @@ export default class StatCarousel extends Component<Props, State> {
 		);
 	}
 
+	getMvpOwnerIds(teams: Team[]) {
+		let best_team_indices: number[] = [];
+		let max_point: number = 0;
+		let member_count = 0;
+
+		teams.forEach((o, i) => {
+			if (o.total_point > max_point) {
+				best_team_indices = [i];
+				max_point = o.total_point;
+			}
+			else if (o.total_point === max_point) {
+				best_team_indices.push(i);
+			}
+		});
+
+		max_point = 0;
+		teams.forEach((t, i) => {
+			if (best_team_indices.indexOf(i) === -1) return;
+
+			t.members.forEach(m => {
+				if (max_point < m.total_point) {
+					max_point = m.total_point;
+					this.mvp_owner_ids = [m.id];
+				}
+				else if (max_point === m.total_point) {
+					this.mvp_owner_ids.push(m.id);
+				}
+
+				member_count++;
+			});
+		});
+
+		if (this.mvp_owner_ids.length > member_count / 10) {
+			this.mvp_owner_ids = [];
+		}
+	}
+
 	render() {
 		let { teams, interval } = this.state;
-		const best_team_index = this.getWinningTeamIndex(teams);
+
+		this.getMvpOwnerIds(teams);
 
 		return (
 			<Carousel className="carousel" autoplay autoplaySpeed={interval * 1000} dotPosition="top">
 				{
-					teams.map((team, index) =>
+					teams.map((team) =>
 						<div className="team" key={team.name}>
 							<h3>{team.name}</h3>
-							{this.renderTeamCard(team, best_team_index === index)}
+							{this.renderTeamCard(team)}
 						</div>
 					)
 				}
