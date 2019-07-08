@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { LeaderboardData, Team } from './api/LeaderboardData';
+import { Team } from './api/LeaderboardData';
 import { fetchTemplateSetting, fetchCaseData, fetchImages } from './api/FetchData';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
