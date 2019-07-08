@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Team } from './api/LeaderboardData';
 import { fetchTemplateSetting, fetchCaseData, fetchImages } from './api/FetchData';
 import Header from './components/Header';
@@ -17,22 +18,44 @@ interface State {
 	teams: Team[];
 	carouselInterval: number;
 	refreshInterval: number;
+	expectation: number;
+	startDate: string;
+	endDate: string;
 }
 
+
+const dateFormat = "YYYY-MM-DD";
+let today = moment();
+
 const DEFAULT_TITLE = "Client Services - Summer: Week One";
+const DEFAULT_REFRESH_INTERVAL = 30;
 const DEFAULT_CAROUSEL_INTERVAL = 15;
+const DEFAULT_EXPECTATION = 1000;
+const DEFAULT_START_DATE = today.format(dateFormat);
+
+today.add(7, "day");
+
+const DEFAULT_END_DATE = today.format(dateFormat);
 
 export default class App extends Component<Props, State> {
-	private timerId: NodeJS.Timeout | null;
+	private carouselTimerId: NodeJS.Timeout | null;
+	private refreshDataTimerId: NodeJS.Timeout | null;
 	private carouselIntervalStorageKey: string = "setting-carousel-interval";
 	private titleStorageKey: string = "setting-leaderboard-title";
+	private startDateStorageKey: string = "setting-startdate";
+	private endDateStorageKey: string = "setting-enddate";
+	private expectationStorageKey: string = "setting-expectation";
 
 	constructor(props: object) {
 		super(props);
-		this.timerId = null;
+		this.carouselTimerId = null;
+		this.refreshDataTimerId = null;
 
 		const title = localStorage.getItem(this.titleStorageKey) || DEFAULT_TITLE;
 		const carouselInterval = localStorage.getItem(this.carouselIntervalStorageKey) || DEFAULT_CAROUSEL_INTERVAL;
+		const startDate = localStorage.getItem(this.startDateStorageKey) || DEFAULT_START_DATE;
+		const endDate = localStorage.getItem(this.endDateStorageKey) || DEFAULT_END_DATE;
+		const expectation = localStorage.getItem(this.expectationStorageKey) || DEFAULT_EXPECTATION;
 
 		this.state = {
 			title: title,
@@ -40,7 +63,10 @@ export default class App extends Component<Props, State> {
 			template_icon: "",
 			teams: [],
 			carouselInterval: +carouselInterval,
-			refreshInterval: 30
+			refreshInterval: DEFAULT_REFRESH_INTERVAL,
+			expectation: +expectation,
+			startDate: startDate,
+			endDate: endDate
 		};
 	}
 
@@ -77,8 +103,8 @@ export default class App extends Component<Props, State> {
 			});
 	}
 
-	readLeaderboardData() {
-		fetchCaseData()
+	readLeaderboardData(startDate: string, endDate: string) {
+		fetchCaseData(startDate, endDate)
 			.then((res: any) => {
 				let { teams } = this.state;
 
@@ -89,15 +115,17 @@ export default class App extends Component<Props, State> {
 					t.members.forEach(m => {
 						const stat = res[m.id];
 
-						if (!stat) return;
+						if (!stat) {
+							m.case_number = 0;
+							m.total_point = 0;
+						}
+						else {
+							m.case_number = stat.case_number;
+							m.total_point = stat.total_point;
 
-						const { total_point, case_number } = stat;
-
-						t.case_number += case_number;
-						t.total_point += total_point;
-
-						m.case_number = case_number;
-						m.total_point = total_point;
+							t.case_number += stat.case_number;
+							t.total_point += stat.total_point;
+						}
 					})
 				})
 
@@ -105,37 +133,66 @@ export default class App extends Component<Props, State> {
 			});
 	}
 
-	startRefreshData() {
-		const { refreshInterval } = this.state;
-		this.readLeaderboardData();
+	startRefreshData(startDate?: string, endDate?: string) {
 
-		setTimeout(() => {
+		if (startDate == null) {
+			startDate = this.state.startDate;
+		}
 
-			this.startRefreshData();
+		if (endDate == null) {
+			endDate = this.state.endDate;
+		}
 
-		}, refreshInterval * 1000);
+		this.readLeaderboardData(startDate, endDate);
+
+		this.refreshDataTimerId = setTimeout(() => {
+
+			this.startRefreshData(startDate, endDate);
+
+		}, this.state.refreshInterval * 1000);
 	}
 
-	onSettingsUpdate = (settings: any) => {
-		let { carouselInterval, title } = this.state;
+	onSettingsUpdate(settings: any) {
+		let { carouselInterval, title, startDate, endDate, expectation } = this.state;
+		let dateRangeModified = (settings.startDate !== startDate || settings.endDate !== endDate);
+		let carouselIntervalModified = settings.interval !== carouselInterval;
 
-		if (settings.interval === carouselInterval
-			&& settings.title === title) return;
+
+		if (settings.title === title
+			&& settings.expectation === expectation
+			&& !carouselIntervalModified
+			&& !dateRangeModified) return;
 
 		this.setState({
 			carouselInterval: settings.interval,
-			title: settings.title
+			title: settings.title,
+			expectation: settings.expectation,
+			startDate: settings.startDate,
+			endDate: settings.endDate
 		});
 
-		this.setTimer();
-
-		localStorage.setItem(this.carouselIntervalStorageKey, settings.interval.toString());
 		localStorage.setItem(this.titleStorageKey, settings.title.toString());
+		localStorage.setItem(this.expectationStorageKey, settings.expectation.toString());
+
+		if (carouselIntervalModified) {
+			localStorage.setItem(this.carouselIntervalStorageKey, settings.interval.toString());
+			this.setTimer();
+		}
+
+		if (dateRangeModified) {
+			localStorage.setItem(this.startDateStorageKey, settings.startDate.toString());
+			localStorage.setItem(this.endDateStorageKey, settings.endDate.toString());
+
+			if (this.refreshDataTimerId !== null) {
+				clearTimeout(this.refreshDataTimerId);
+				this.startRefreshData(settings.startDate, settings.endDate);
+			}
+		}
 	}
 
 	clearTimer() {
-		if (this.timerId !== null) {
-			clearInterval(this.timerId);
+		if (this.carouselTimerId !== null) {
+			clearInterval(this.carouselTimerId);
 		}
 	}
 
@@ -144,20 +201,29 @@ export default class App extends Component<Props, State> {
 	}
 
 	render() {
-		let { title, template_name, template_icon, teams, carouselInterval: interval } = this.state;
+		let { title, template_name, template_icon, teams,
+			carouselInterval: interval, startDate, endDate, expectation } = this.state;
 
 		return (
 			<div className="App">
 				<Header title={title}
-					onSettingsUpdate={this.onSettingsUpdate}
 					interval={interval}
+					expectation={expectation}
+					startDate={startDate}
+					endDate={endDate}
+					onSettingsUpdate={(settings: any) => {
+						this.onSettingsUpdate(settings);
+					}}
 				/>
 				<div className="main-content">
 					<div className="overview-panel">
-						<Leaderboard title={template_name} teams={teams} icon={template_icon}></Leaderboard>
+						<Leaderboard title={template_name}
+							expectation={expectation}
+							teams={teams}
+							icon={template_icon}></Leaderboard>
 					</div>
 					<div className="detail-panel">
-						<StatCarousel teams={teams} interval={this.state.carouselInterval}></StatCarousel>
+						<StatCarousel teams={teams} interval={interval}></StatCarousel>
 					</div>
 				</div>
 			</div>

@@ -7,12 +7,14 @@ interface Props {
 	title: string;
 	teams: Team[];
 	icon: string;
+	expectation: number;
 }
 
 interface State {
 	title: string;
 	teams: Team[];
 	icon: string;
+	expectation: number;
 }
 
 export default class Leaderboard extends Component<Props, State> {
@@ -26,10 +28,10 @@ export default class Leaderboard extends Component<Props, State> {
 		this.setState({ ...props });
 	}
 
-	renderLeaderboard(teams: Team[]) {
+	renderLeaderboard(teams: Team[], expectation: number) {
 		teams.sort((a, b) => a.total_point > b.total_point ? -1 : 1);
 
-		const maxScore = Math.max(...teams.map(o => o.total_point));
+		const maxScore = Math.max(expectation, Math.max(...teams.map(o => o.total_point)));
 		const winnderCount = teams.filter(o => o.total_point >= maxScore).length;
 
 		return (
@@ -60,7 +62,7 @@ export default class Leaderboard extends Component<Props, State> {
 	}
 
 	render() {
-		const { title, teams, icon } = this.state;
+		const { title, teams, icon, expectation } = this.state;
 
 		return (
 			<div className='leader-board'>
@@ -72,7 +74,7 @@ export default class Leaderboard extends Component<Props, State> {
 					<span className='game-hint'>Most Total Points Wins!</span>
 				</div>
 				<div className='underline'></div>
-				{this.renderLeaderboard(teams)}
+				{this.renderLeaderboard(teams, expectation)}
 			</div>
 		);
 	}
