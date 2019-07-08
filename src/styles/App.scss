@@ -26,17 +26,19 @@ body,
 
 	.main-content {
 		height: calc(100% - 100px);
+		background-image: url(../images/theme-baseball/baseball-background.jpg);
 
 		.overview-panel {
 			width: 67%;
-			background-color: rgba(255, 255, 255, 0.6);
+			height: 100%;
+			background-color: rgba(255, 255, 255, 0.8);
 			display: inline-block;
 		}
 
 		.detail-panel {
 			width: 33%;
 			height: 100%;
-			background-color: rgba(50, 50, 50, 1);
+			background-color: rgba(50, 50, 50, 0.9);
 			float: right;
 
 			&::after {

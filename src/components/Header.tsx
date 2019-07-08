@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Slider, InputNumber } from 'antd';
+import { Modal, Slider, InputNumber, Input } from 'antd';
 import '../styles/Header.scss';
 
 
@@ -37,6 +37,7 @@ export default class Header extends PureComponent<Props, State> {
 
 	handleOk = () => {
 		this.setState({
+
 			settingsVisible: false,
 		});
 
@@ -49,30 +50,42 @@ export default class Header extends PureComponent<Props, State> {
 		});
 	}
 
-	onChange = (value: any) => {
+	onIntervalChange = (value: any) => {
 		this.setState({
 			interval: value
 		});
 	}
 
+	onTitleChange = (value: any) => {
+		this.setState({
+			title: value
+		});
+	}
+
 	render() {
-		const { title } = this.state;
+		const { title, settingsVisible, interval } = this.state;
 
 		return (
 			<div className="app-header">
 				<label>{title}</label>
-				<label>{new Date().toLocaleDateString()}</label>
+				{/* <label>{new Date().toLocaleDateString()}</label> */}
 				<div className="settings" onClick={this.showModal}></div>
 				<Modal
-					visible={this.state.settingsVisible}
+					visible={settingsVisible}
 					onOk={this.handleOk}
 					onCancel={this.handleCancel}
 					title="Setting Refresh Interval">
+					<div>Board Title</div>
 					<div className="interval-modal-content-wrapper">
-						<div className="slider-wrapper"><Slider min={1} max={30} onChange={this.onChange} value={this.state.interval} /></div>
-						<div className="input-wrapper"><InputNumber min={1} max={30} value={this.state.interval} onChange={this.onChange} /></div>
+						<div className="input-wrapper">
+							<Input value={title} />
+						</div>
 					</div>
-
+					<div>Caoursel Interval (second)</div>
+					<div className="interval-modal-content-wrapper">
+						<div className="slider-wrapper"><Slider min={1} max={30} onChange={this.onIntervalChange} value={interval} /></div>
+						<div className="input-wrapper"><InputNumber min={1} max={30} value={interval} onChange={this.onIntervalChange} /></div>
+					</div>
 				</Modal>
 			</div>
 		);

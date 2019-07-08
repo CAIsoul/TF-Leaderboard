@@ -27,8 +27,8 @@ export default class App extends Component<Props, State> {
 			template_name: "",
 			template_icon: "",
 			teams: [],
-			carouselInterval: 3,
-			refreshInterval: 5
+			carouselInterval: 15,
+			refreshInterval: 30
 		};
 	}
 
@@ -76,6 +76,9 @@ export default class App extends Component<Props, State> {
 
 					t.members.forEach(m => {
 						const stat = res[m.id];
+
+						if (!stat) return;
+
 						const { total_point, case_number } = stat;
 
 						t.case_number += case_number;
@@ -122,7 +125,10 @@ export default class App extends Component<Props, State> {
 
 		return (
 			<div className="App">
-				<Header title="TF-Leaderboard" changeCarouselInterval={this.onCarouselIntervalChanged} interval={interval}></Header>
+				<Header title="Client Services - Summer: Week One"
+					changeCarouselInterval={this.onCarouselIntervalChanged}
+					interval={interval}
+				/>
 				<div className="main-content">
 					<div className="overview-panel">
 						<Leaderboard title={template_name} teams={teams} icon={template_icon}></Leaderboard>

@@ -29,7 +29,9 @@ export default class StatCarousel extends Component<Props, State> {
 	}
 
 	calculateAvgPoint(item: any) {
-		return (item.total_point / item.case_number).toFixed(1);
+		let value = (item.case_number === 0) ? 0 : (item.total_point / item.case_number);
+
+		return value.toFixed(1);
 	}
 
 	getWinningTeamIndex(teams: Team[]) {
@@ -63,6 +65,14 @@ export default class StatCarousel extends Component<Props, State> {
 
 	renderMemberStat(members: Member[], includeRanking: boolean, isWinningTeam: boolean) {
 		members.sort((a: Member, b: Member) => {
+			if (a.total_point === b.total_point) {
+				if (a.case_number === b.case_number) {
+					return a.name < b.name ? 1 : -1;
+				}
+
+				return a.case_number < b.case_number ? 1 : -1;
+			}
+
 			return a.total_point < b.total_point ? 1 : -1;
 		});
 
