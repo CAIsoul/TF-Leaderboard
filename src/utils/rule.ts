@@ -55,14 +55,14 @@ export function getMvpOwnerIds(teams: Team[]) {
 	let maxMvpScale = 0.1;
 	let mvpOwnerIds: string[] = [];
 
-	teams.forEach(t => {
-		t.members.forEach(m => {
+	teams.forEach((t: Team) => {
+		t.members.forEach((m: Member) => {
 			let value = getValueOnFactor(m);
 			if (maxScore < value) {
 				maxScore = value;
 				mvpOwnerIds = [m.id];
 			}
-			else if (maxScore == value) {
+			else if (maxScore === value) {
 				mvpOwnerIds.push(m.id);
 			}
 
