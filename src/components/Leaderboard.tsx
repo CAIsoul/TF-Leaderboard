@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Team } from '../api/LeaderboardData';
+import { getValueOnFactor, sortListRank } from '../utils/rule';
 import trophy from '../images/icons/trophy.png';
 import '../styles/Leaderboard.scss';
 
@@ -29,17 +30,18 @@ export default class Leaderboard extends Component<Props, State> {
 	}
 
 	renderLeaderboard(teams: Team[], expectation: number) {
-		teams.sort((a, b) => a.total_point > b.total_point ? -1 : 1);
+		sortListRank(teams);
 
-		const maxScore = Math.max(...teams.map(o => o.total_point));
-		const winnerCount = teams.filter(o => o.total_point >= maxScore).length;
+		const maxValue = Math.max(...teams.map(o => getValueOnFactor(o)));
+		const winnerCount = teams.filter(o => getValueOnFactor(o) >= maxValue).length;
 
 		return (
 			<div className='content'>
 				{
 					teams.map((item, index) => {
-						const { name, logo, total_point } = item;
-						const barWidth = total_point === 0 ? 0 : `${100 * total_point / Math.max(expectation, maxScore)}%`;
+						const factorValue = getValueOnFactor(item);
+						const { name, logo } = item;
+						const barWidth = factorValue === 0 ? 0 : `${100 * factorValue / Math.max(expectation, maxValue)}%`;
 
 						return (
 							<div className='team' key={index}>
@@ -51,7 +53,7 @@ export default class Leaderboard extends Component<Props, State> {
 								<div className="bar-container">
 									<div className='bar' style={{ width: barWidth }}></div>
 								</div>
-								<div className='score'>{total_point}</div>
+								<div className='score'>{factorValue}</div>
 								{(winnerCount === 1 && index === 0) ? <img src={trophy} className='trophy' alt='winner trophy' /> : <div></div>}
 							</div>
 						);

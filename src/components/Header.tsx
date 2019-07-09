@@ -88,6 +88,8 @@ export default class Header extends PureComponent<Props, State> {
 	}
 
 	onDateRangeChange(dates: any) {
+		if (dates.length < 2) return;
+
 		this.setState({
 			startDate: dates[0].format(dateFormat),
 			endDate: dates[1].format(dateFormat)

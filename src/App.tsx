@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { Team } from './api/LeaderboardData';
 import { fetchTemplateSetting, fetchCaseData, fetchImages } from './api/FetchData';
+import { save as saveSetting, get as getSetting } from './utils/setting';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
 import StatCarousel from './components/StatCarousel';
@@ -23,39 +23,22 @@ interface State {
 	endDate: string;
 }
 
-
-const dateFormat = "YYYY-MM-DD";
-let today = moment();
-
-const DEFAULT_TITLE = "Client Services - Summer: Week One";
 const DEFAULT_REFRESH_INTERVAL = 30;
-const DEFAULT_CAROUSEL_INTERVAL = 15;
-const DEFAULT_EXPECTATION = 1000;
-const DEFAULT_START_DATE = today.format(dateFormat);
-
-today.add(7, "day");
-
-const DEFAULT_END_DATE = today.format(dateFormat);
 
 export default class App extends Component<Props, State> {
 	private carouselTimerId: NodeJS.Timeout | null;
 	private refreshDataTimerId: NodeJS.Timeout | null;
-	private carouselIntervalStorageKey: string = "setting-carousel-interval";
-	private titleStorageKey: string = "setting-leaderboard-title";
-	private startDateStorageKey: string = "setting-startdate";
-	private endDateStorageKey: string = "setting-enddate";
-	private expectationStorageKey: string = "setting-expectation";
 
 	constructor(props: object) {
 		super(props);
 		this.carouselTimerId = null;
 		this.refreshDataTimerId = null;
 
-		const title = localStorage.getItem(this.titleStorageKey) || DEFAULT_TITLE;
-		const carouselInterval = localStorage.getItem(this.carouselIntervalStorageKey) || DEFAULT_CAROUSEL_INTERVAL;
-		const startDate = localStorage.getItem(this.startDateStorageKey) || DEFAULT_START_DATE;
-		const endDate = localStorage.getItem(this.endDateStorageKey) || DEFAULT_END_DATE;
-		const expectation = localStorage.getItem(this.expectationStorageKey) || DEFAULT_EXPECTATION;
+		const title = getSetting("leaderboard-title");
+		const carouselInterval = getSetting("carousel-interval");
+		const startDate = getSetting("start-date");
+		const endDate = getSetting("end-date");
+		const expectation = getSetting("score-expectation");
 
 		this.state = {
 			title: title,
@@ -171,17 +154,17 @@ export default class App extends Component<Props, State> {
 			endDate: settings.endDate
 		});
 
-		localStorage.setItem(this.titleStorageKey, settings.title.toString());
-		localStorage.setItem(this.expectationStorageKey, settings.expectation.toString());
+		saveSetting('leaderboard-title', settings.title.toString());
+		saveSetting('score-expectation', settings.expectation.toString());
 
 		if (carouselIntervalModified) {
-			localStorage.setItem(this.carouselIntervalStorageKey, settings.interval.toString());
+			saveSetting('carousel-interval', settings.interval.toString());
 			this.setTimer();
 		}
 
 		if (dateRangeModified) {
-			localStorage.setItem(this.startDateStorageKey, settings.startDate.toString());
-			localStorage.setItem(this.endDateStorageKey, settings.endDate.toString());
+			saveSetting('start-date', settings.startDate.toString());
+			saveSetting('end-date', settings.endDate.toString());
 
 			if (this.refreshDataTimerId !== null) {
 				clearTimeout(this.refreshDataTimerId);
