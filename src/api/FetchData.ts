@@ -8,8 +8,8 @@
  * TODO: User should config theme associated resources.
  * The theme name may be the indentifier.
  */
-const baseUrl = 'http://184.73.190.18/TF-Leaderboard-API/tf-leaderboard/';
-// const baseUrl = 'http://dashboard.hq.transfinder.com/TF-Leaderboard-API/tf-leaderboard/';
+// const baseUrl = 'http://184.73.190.18/TF-Leaderboard-API/tf-leaderboard/';
+const baseUrl = 'http://dashboard.hq.transfinder.com/TF-Leaderboard-API/tf-leaderboard/';
 // const baseUrl = 'http://localhost/TF-Leaderboard-API/tf-leaderboard/';
 const templateId = 1;
 
