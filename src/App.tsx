@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Team } from './api/LeaderboardData';
-import { fetchTemplateSetting, fetchCaseData, fetchImages } from './api/FetchData';
+import { Team, Configuration } from './api/LeaderboardData';
+import { fetchTemplateSetting, fetchCaseData, fetchImages, updateConfiguration } from './api/FetchData';
 import { get as getSetting, refresh as refreshConfiguration } from './utils/setting';
+import { changeWinnerFactor, getWinningLabel } from './utils/rule';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
 import StatCarousel from './components/StatCarousel';
@@ -65,6 +66,8 @@ export default class App extends Component<Props, State> {
 				const endDate: any = getSetting('end-date');
 				const expectation: any = getSetting('score-expectation');
 				const winningCondition: any = getSetting('winning-condition');
+
+				changeWinnerFactor(winningCondition);
 
 				this.setState({
 					title: title,
@@ -156,24 +159,38 @@ export default class App extends Component<Props, State> {
 		}, this.state.refreshInterval * 1000);
 	}
 
-	onSettingsUpdate(settings: any) {
-		let { carouselInterval, title, startDate, endDate, expectation } = this.state;
+	onSettingsUpdate(settings: Configuration) {
+		let { carouselInterval, winningCondition, title, startDate, endDate, expectation } = this.state;
 		let dateRangeModified = (settings.startDate !== startDate || settings.endDate !== endDate);
-		let carouselIntervalModified = settings.interval !== carouselInterval;
+		let carouselIntervalModified = settings.carouselInterval !== carouselInterval;
+		let winningConditionModified = settings.winningCondition !== winningCondition;
 
 
-		if (settings.title === title
-			&& settings.expectation === expectation
+		if (settings.boardTitle === title
+			&& settings.scoreExpectation === expectation
+			&& !winningConditionModified
 			&& !carouselIntervalModified
 			&& !dateRangeModified) return;
 
+		let newConfig: Configuration = {
+			carouselInterval: settings.carouselInterval,
+			boardTitle: settings.boardTitle,
+			winningCondition: settings.winningCondition,
+			scoreExpectation: settings.scoreExpectation,
+			startDate: settings.startDate,
+			endDate: settings.endDate
+		};
+
 		this.setState({
-			carouselInterval: settings.interval,
-			title: settings.title,
-			expectation: settings.expectation,
+			carouselInterval: settings.carouselInterval,
+			title: settings.boardTitle,
+			winningCondition: settings.winningCondition,
+			expectation: settings.scoreExpectation,
 			startDate: settings.startDate,
 			endDate: settings.endDate
 		});
+
+		updateConfiguration(newConfig);
 
 		// saveSetting('leaderboard-title', settings.title.toString());
 		// saveSetting('score-expectation', settings.expectation.toString());
@@ -192,6 +209,10 @@ export default class App extends Component<Props, State> {
 				this.startRefreshData(settings.startDate, settings.endDate);
 			}
 		}
+
+		if (winningConditionModified) {
+			changeWinnerFactor(settings.winningCondition);
+		}
 	}
 
 	clearTimer() {
@@ -205,23 +226,26 @@ export default class App extends Component<Props, State> {
 	}
 
 	render() {
-		let { title, template_name, template_icon, teams,
+		let { title, template_name, template_icon, teams, winningCondition,
 			carouselInterval: interval, startDate, endDate, expectation } = this.state;
+		let winningLabel = getWinningLabel();
 
 		return (
 			<div className="App">
-				<Header title={title}
-					interval={interval}
-					expectation={expectation}
+				<Header boardTitle={title}
+					winningCondition={winningCondition}
+					carouselInterval={interval}
+					scoreExpectation={expectation}
 					startDate={startDate}
 					endDate={endDate}
-					onSettingsUpdate={(settings: any) => {
+					onSettingsUpdate={(settings: Configuration) => {
 						this.onSettingsUpdate(settings);
 					}}
 				/>
 				<div className="main-content">
 					<div className="overview-panel">
 						<Leaderboard title={template_name}
+							winningLabel={winningLabel}
 							expectation={expectation}
 							teams={teams}
 							icon={template_icon}></Leaderboard>

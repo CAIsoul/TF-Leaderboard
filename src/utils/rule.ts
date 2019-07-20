@@ -3,15 +3,15 @@ import { Team, Member } from '../api/LeaderboardData';
 const winningFactors: any = {
 	total_point: {
 		label: 'Most Total Points Wins!',
-		getValue: (item: any) => item.total_point
+		getValue: (item: any) => isNaN(item.total_point) ? 0 : item.total_point
 	},
 	case_number: {
 		label: 'Most Case Numbers Wins!',
-		getValue: (item: any) => item.case_number
+		getValue: (item: any) => isNaN(item.case_number) ? 0 : item.case_number
 	},
 	average: {
 		label: 'Highest Average Point Wins!',
-		getValue: (item: any) => item.case_number === 0 ? 0 : item.total_point / item.case_number
+		getValue: (item: any) => !item.case_number ? 0 : item.total_point / item.case_number
 	},
 	name: {
 		hidden: true,
@@ -50,7 +50,7 @@ export function changeWinnerFactor(factor: string) {
 export function calculateAvgPoint(item: any) {
 	let value = (item.case_number === 0) ? 0 : (item.total_point / item.case_number);
 
-	return value.toFixed(1);
+	return Math.floor(value * 100) / 100;
 }
 
 /**

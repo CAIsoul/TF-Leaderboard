@@ -129,3 +129,23 @@ export function fetchConfiguration() {
 			return config;
 		});
 }
+
+export function updateConfiguration(config: Configuration) {
+	const settings = {
+		BoardTitle: config.boardTitle,
+		CarouselInterval: config.carouselInterval.toString(),
+		StartDate: config.startDate,
+		EndDate: config.endDate,
+		ScoreExpectation: config.scoreExpectation.toString(),
+		WinningCondition: config.winningCondition
+	};
+
+	return fetch(`${baseUrl}saveconfiguration`, {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(settings)
+	});
+}

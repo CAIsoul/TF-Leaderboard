@@ -1,28 +1,31 @@
 import React, { PureComponent } from 'react';
-import { Modal, Slider, InputNumber, Input, DatePicker, Dropdown, Button, Icon, Menu } from 'antd';
+import { Modal, Slider, InputNumber, Input, DatePicker, Select, Menu } from 'antd';
 import moment from 'moment';
 import '../styles/Header.scss';
 
 
 interface Props {
-	title: string;
+	boardTitle: string;
+	winningCondition: string;
 	settingsVisible?: boolean;
-	interval: number;
-	expectation: number;
+	carouselInterval: number;
+	scoreExpectation: number;
 	startDate: string;
 	endDate: string;
 	onSettingsUpdate: Function;
 }
 
 interface State {
-	title: string;
-	expectation: number;
+	boardTitle: string;
+	winningCondition: string;
+	scoreExpectation: number;
 	startDate: string;
 	endDate: string;
-	interval: number;
+	carouselInterval: number;
 	settingsVisible: boolean;
 }
 
+const { Option } = Select;
 const dateFormat = "YYYY-MM-DD";
 
 export default class Header extends PureComponent<Props, State> {
@@ -41,47 +44,49 @@ export default class Header extends PureComponent<Props, State> {
 	}
 
 	handleOk = () => {
-		let { title, interval, startDate, endDate, expectation } = this.state;
+		let { boardTitle, winningCondition, carouselInterval, startDate, endDate, scoreExpectation } = this.state;
 
 		this.setState({ settingsVisible: false });
 
 		this.props.onSettingsUpdate({
-			title: title,
-			interval: interval,
+			boardTitle: boardTitle,
+			winningCondition: winningCondition,
+			carouselInterval: carouselInterval,
 			startDate: startDate,
 			endDate: endDate,
-			expectation: expectation
+			scoreExpectation: scoreExpectation
 		});
 	}
 
 	handleCancel = () => {
-		let { title, interval, startDate, endDate, expectation } = this.props;
+		let { boardTitle, winningCondition, carouselInterval, startDate, endDate, scoreExpectation } = this.props;
 
 		this.setState({
 			settingsVisible: false,
-			title: title,
-			interval: interval,
+			boardTitle: boardTitle,
+			winningCondition: winningCondition,
+			carouselInterval: carouselInterval,
 			startDate: startDate,
 			endDate: endDate,
-			expectation: expectation
+			scoreExpectation: scoreExpectation
 		});
 	}
 
-	onIntervalChange = (value: any) => {
+	onIntervalChange(value: any) {
 		this.setState({
-			interval: value
+			carouselInterval: value
 		});
 	}
 
-	onExpectationChange = (value: any) => {
+	onExpectationChange(value: any) {
 		this.setState({
-			expectation: value
+			scoreExpectation: value
 		});
 	}
 
-	onTitleChange = (evt: any) => {
+	onTitleChange(evt: any) {
 		this.setState({
-			title: evt.target.value
+			boardTitle: evt.target.value
 		});
 	}
 
@@ -94,22 +99,12 @@ export default class Header extends PureComponent<Props, State> {
 		});
 	}
 
-	renderSettingModal() {
-		let { title, settingsVisible, interval, expectation, startDate, endDate } = this.state;
-		let menu = (
-			<Menu>
-				<Menu.Item key="1">
-					1st menu item
-				</Menu.Item>
-				<Menu.Item key="2">
-					2nd menu item
-				</Menu.Item>
-				<Menu.Item key="3">
-					3rd item
-				</Menu.Item>
-			</Menu>
-		);
+	onWinningConditionChange(value: string) {
+		this.setState({ winningCondition: value });
+	}
 
+	renderSettingModal() {
+		let { boardTitle, winningCondition, settingsVisible, carouselInterval, scoreExpectation, startDate, endDate } = this.state;
 
 		return (
 			<Modal
@@ -121,7 +116,7 @@ export default class Header extends PureComponent<Props, State> {
 					<div className='input-title'>Leaderboard Title</div>
 					<div className='title-modal content-wrapper'>
 						<div className='input-wrapper'>
-							<Input type='primary' value={title} onChange={evt => this.onTitleChange(evt)} />
+							<Input type='primary' value={boardTitle} onChange={evt => this.onTitleChange(evt)} />
 						</div>
 					</div>
 				</div>
@@ -137,25 +132,28 @@ export default class Header extends PureComponent<Props, State> {
 				<div className='input-group'>
 					<div className='input-title'>Winning Condition</div>
 					<div className='dropdown-modal content-wrapper'>
-						<Dropdown overlay={menu}>
-							<Button>
-								Button <Icon type="down" />
-							</Button>
-						</Dropdown>
+						<Select value={winningCondition}
+							defaultValue={winningCondition}
+							style={{ width: 200 }}
+							onChange={(val: string) => this.onWinningConditionChange(val)}>
+							<Option value="total_point">Total Point</Option>
+							<Option value="case_number">Case Number</Option>
+							<Option value="average">Average Point</Option>
+						</Select>
 					</div>
 				</div>
 				<div className='input-group'>
 					<div className='input-title'>Caoursel Interval (second)</div>
 					<div className='interval-modal content-wrapper'>
-						<div className='slider-wrapper'><Slider min={1} max={30} onChange={(val) => this.onIntervalChange(val)} value={interval} /></div>
-						<div className='input-wrapper'><InputNumber min={1} max={30} value={interval} onChange={(val) => this.onIntervalChange(val)} /></div>
+						<div className='slider-wrapper'><Slider min={1} max={30} onChange={(val) => this.onIntervalChange(val)} value={carouselInterval} /></div>
+						<div className='input-wrapper'><InputNumber min={1} max={30} value={carouselInterval} onChange={(val) => this.onIntervalChange(val)} /></div>
 					</div>
 				</div>
 				<div className='input-group'>
-					<div className='input-title'>Total Point/Case Number Expectation</div>
+					<div className='input-title'>Score Expectation</div>
 					<div className='expectation-modal content-wrapper'>
-						<div className='slider-wrapper'><Slider min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={expectation} /></div>
-						<div className='input-wrapper'><InputNumber min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={expectation} /></div>
+						<div className='slider-wrapper'><Slider min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={scoreExpectation} /></div>
+						<div className='input-wrapper'><InputNumber min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={scoreExpectation} /></div>
 					</div>
 				</div>
 			</Modal>
@@ -163,10 +161,10 @@ export default class Header extends PureComponent<Props, State> {
 	}
 
 	render() {
-		const { title } = this.state;
+		const { boardTitle } = this.state;
 		return (
 			<div className='app-header'>
-				<label>{title}</label>
+				<label>{boardTitle}</label>
 				<div className='settings' onClick={this.showModal}></div>
 				{this.renderSettingModal()}
 			</div>

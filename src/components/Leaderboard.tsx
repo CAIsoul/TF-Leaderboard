@@ -9,6 +9,7 @@ interface Props {
 	teams: Team[];
 	icon: string;
 	expectation: number;
+	winningLabel: string;
 }
 
 interface State {
@@ -16,6 +17,7 @@ interface State {
 	teams: Team[];
 	icon: string;
 	expectation: number;
+	winningLabel: string;
 }
 
 export default class Leaderboard extends Component<Props, State> {
@@ -39,7 +41,7 @@ export default class Leaderboard extends Component<Props, State> {
 			<div className='content'>
 				{
 					teams.map((item, index) => {
-						const factorValue = getValueOnFactor(item);
+						const factorValue = Math.floor(getValueOnFactor(item) * 100) / 100;
 						const { name, logo } = item;
 						const barWidth = factorValue === 0 ? 0 : `${100 * factorValue / Math.max(expectation, maxValue)}%`;
 
@@ -64,7 +66,7 @@ export default class Leaderboard extends Component<Props, State> {
 	}
 
 	render() {
-		const { title, teams, icon, expectation } = this.state;
+		const { title, teams, icon, expectation, winningLabel } = this.state;
 
 		return (
 			<div className='leader-board'>
@@ -73,7 +75,7 @@ export default class Leaderboard extends Component<Props, State> {
 						!icon ? null : <img src={`data:image/png;base64,${icon}`} className="theme-logo" alt="theme icon" />
 					}
 					<span className='game-title'>{title}</span>
-					<span className='game-hint'>Most Total Points Wins!</span>
+					<span className='game-hint'>{winningLabel}</span>
 				</div>
 				<div className='underline'></div>
 				{this.renderLeaderboard(teams, expectation)}

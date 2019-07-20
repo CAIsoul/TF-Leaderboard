@@ -27,5 +27,5 @@ export interface Configuration {
 	startDate: string;
 	endDate: string;
 	scoreExpectation: number;
-	winningCondition: number;
+	winningCondition: string;
 }
