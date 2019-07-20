@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Slider, InputNumber, Input, DatePicker } from 'antd';
+import { Modal, Slider, InputNumber, Input, DatePicker, Dropdown, Button, Icon, Menu } from 'antd';
 import moment from 'moment';
 import '../styles/Header.scss';
 
@@ -33,9 +33,7 @@ export default class Header extends PureComponent<Props, State> {
 	}
 
 	componentWillReceiveProps(props: any) {
-		this.setState({
-			title: props.title
-		});
+		this.setState(Object.assign({}, props));
 	}
 
 	showModal = () => {
@@ -96,25 +94,38 @@ export default class Header extends PureComponent<Props, State> {
 		});
 	}
 
-	render() {
-		const { title, settingsVisible, interval, expectation, startDate, endDate } = this.state;
+	renderSettingModal() {
+		let { title, settingsVisible, interval, expectation, startDate, endDate } = this.state;
+		let menu = (
+			<Menu>
+				<Menu.Item key="1">
+					1st menu item
+				</Menu.Item>
+				<Menu.Item key="2">
+					2nd menu item
+				</Menu.Item>
+				<Menu.Item key="3">
+					3rd item
+				</Menu.Item>
+			</Menu>
+		);
+
 
 		return (
-			<div className='app-header'>
-				<label>{title}</label>
-				{/* <label>{new Date().toLocaleDateString()}</label> */}
-				<div className='settings' onClick={this.showModal}></div>
-				<Modal
-					visible={settingsVisible}
-					onOk={this.handleOk}
-					onCancel={this.handleCancel}
-					title='Setting Refresh Interval'>
+			<Modal
+				visible={settingsVisible}
+				onOk={this.handleOk}
+				onCancel={this.handleCancel}
+				title='Setting Refresh Interval'>
+				<div className='input-group'>
 					<div className='input-title'>Leaderboard Title</div>
 					<div className='title-modal content-wrapper'>
 						<div className='input-wrapper'>
 							<Input type='primary' value={title} onChange={evt => this.onTitleChange(evt)} />
 						</div>
 					</div>
+				</div>
+				<div className='input-group'>
 					<div className='input-title'>Date Range</div>
 					<div className='daterange-modal content-wrapper'>
 						<DatePicker.RangePicker
@@ -122,17 +133,42 @@ export default class Header extends PureComponent<Props, State> {
 							format={dateFormat}
 							onChange={(dates) => this.onDateRangeChange(dates)} />
 					</div>
+				</div>
+				<div className='input-group'>
+					<div className='input-title'>Winning Condition</div>
+					<div className='dropdown-modal content-wrapper'>
+						<Dropdown overlay={menu}>
+							<Button>
+								Button <Icon type="down" />
+							</Button>
+						</Dropdown>
+					</div>
+				</div>
+				<div className='input-group'>
 					<div className='input-title'>Caoursel Interval (second)</div>
 					<div className='interval-modal content-wrapper'>
 						<div className='slider-wrapper'><Slider min={1} max={30} onChange={(val) => this.onIntervalChange(val)} value={interval} /></div>
 						<div className='input-wrapper'><InputNumber min={1} max={30} value={interval} onChange={(val) => this.onIntervalChange(val)} /></div>
 					</div>
+				</div>
+				<div className='input-group'>
 					<div className='input-title'>Total Point/Case Number Expectation</div>
 					<div className='expectation-modal content-wrapper'>
 						<div className='slider-wrapper'><Slider min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={expectation} /></div>
 						<div className='input-wrapper'><InputNumber min={1} max={2000} onChange={(val) => this.onExpectationChange(val)} value={expectation} /></div>
 					</div>
-				</Modal>
+				</div>
+			</Modal>
+		);
+	}
+
+	render() {
+		const { title } = this.state;
+		return (
+			<div className='app-header'>
+				<label>{title}</label>
+				<div className='settings' onClick={this.showModal}></div>
+				{this.renderSettingModal()}
 			</div>
 		);
 	}

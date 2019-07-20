@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Team } from './api/LeaderboardData';
 import { fetchTemplateSetting, fetchCaseData, fetchImages } from './api/FetchData';
-import { save as saveSetting, get as getSetting } from './utils/setting';
+import { get as getSetting, refresh as refreshConfiguration } from './utils/setting';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
 import StatCarousel from './components/StatCarousel';
@@ -21,6 +21,7 @@ interface State {
 	expectation: number;
 	startDate: string;
 	endDate: string;
+	winningCondition: string;
 }
 
 const DEFAULT_REFRESH_INTERVAL = 30;
@@ -34,27 +35,47 @@ export default class App extends Component<Props, State> {
 		this.carouselTimerId = null;
 		this.refreshDataTimerId = null;
 
-		const title = getSetting("leaderboard-title");
-		const carouselInterval = getSetting("carousel-interval");
-		const startDate = getSetting("start-date");
-		const endDate = getSetting("end-date");
-		const expectation = getSetting("score-expectation");
-
 		this.state = {
-			title: title,
-			template_name: "",
-			template_icon: "",
+			title: '',
+			template_name: '',
+			template_icon: '',
 			teams: [],
-			carouselInterval: +carouselInterval,
+			carouselInterval: 0,
 			refreshInterval: DEFAULT_REFRESH_INTERVAL,
-			expectation: +expectation,
-			startDate: startDate,
-			endDate: endDate
+			expectation: 0,
+			startDate: '',
+			endDate: '',
+			winningCondition: ''
 		};
 	}
 
 	componentWillMount() {
-		this.applyLeaderboardTemplate();
+		this.loadConfiguration()
+			.then(() => {
+				this.applyLeaderboardTemplate();
+			});
+	}
+
+	loadConfiguration() {
+		return refreshConfiguration()
+			.then(() => {
+				const title: any = getSetting('leaderboard-title');
+				const carouselInterval: any = getSetting('carousel-interval');
+				const startDate: any = getSetting('start-date');
+				const endDate: any = getSetting('end-date');
+				const expectation: any = getSetting('score-expectation');
+				const winningCondition: any = getSetting('winning-condition');
+
+				this.setState({
+					title: title,
+					carouselInterval: carouselInterval,
+					expectation: expectation,
+					startDate: startDate,
+					endDate: endDate,
+					winningCondition: winningCondition
+				});
+
+			})
 	}
 
 	applyLeaderboardTemplate() {
@@ -154,17 +175,17 @@ export default class App extends Component<Props, State> {
 			endDate: settings.endDate
 		});
 
-		saveSetting('leaderboard-title', settings.title.toString());
-		saveSetting('score-expectation', settings.expectation.toString());
+		// saveSetting('leaderboard-title', settings.title.toString());
+		// saveSetting('score-expectation', settings.expectation.toString());
 
 		if (carouselIntervalModified) {
-			saveSetting('carousel-interval', settings.interval.toString());
+			// saveSetting('carousel-interval', settings.interval.toString());
 			this.setTimer();
 		}
 
 		if (dateRangeModified) {
-			saveSetting('start-date', settings.startDate.toString());
-			saveSetting('end-date', settings.endDate.toString());
+			// saveSetting('start-date', settings.startDate.toString());
+			// saveSetting('end-date', settings.endDate.toString());
 
 			if (this.refreshDataTimerId !== null) {
 				clearTimeout(this.refreshDataTimerId);

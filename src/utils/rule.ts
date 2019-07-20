@@ -1,39 +1,65 @@
 import { Team, Member } from '../api/LeaderboardData';
 
-const allRankingFactors = ['total_point', 'case_number', 'avgerage', 'name'];
+const winningFactors: any = {
+	total_point: {
+		label: 'Most Total Points Wins!',
+		getValue: (item: any) => item.total_point
+	},
+	case_number: {
+		label: 'Most Case Numbers Wins!',
+		getValue: (item: any) => item.case_number
+	},
+	average: {
+		label: 'Highest Average Point Wins!',
+		getValue: (item: any) => item.case_number === 0 ? 0 : item.total_point / item.case_number
+	},
+	name: {
+		hidden: true,
+		getValue: (item: any) => item.name
+	}
+};
+
 let winningFactor = 'total_point';
 
+/**
+ * Get specified value in the object.
+ * 
+ * @param item member/team object
+ * @param factor the field name 
+ */
 export function getValueOnFactor(item: any, factor?: string) {
-	if (factor == null) {
-		factor = winningFactor;
-	}
+	if (factor == null) factor = winningFactor;
 
-	switch (winningFactor) {
-		case 'total_point':
-			return item.total_point;
-		case 'case_number':
-			return item.case_number;
-		case 'average':
-			return item.case_number === 0 ? 0 : item.total_point / item.case_number;
-		case 'name':
-			return item.name;
-		default:
-			return;
-	}
+	return winningFactors[factor].getValue(item);
 }
 
+/**
+ * Change the winning factor.
+ * 
+ * @param factor new winning factor
+ */
 export function changeWinnerFactor(factor: string) {
 	winningFactor = factor;
 }
 
+/**
+ * Calculate the average poinmt 
+ * 
+ * @param item member/team object
+ */
 export function calculateAvgPoint(item: any) {
 	let value = (item.case_number === 0) ? 0 : (item.total_point / item.case_number);
 
 	return value.toFixed(1);
 }
 
+/**
+ * Sort the given list by winning factor.
+ * 
+ * @param list list of member/team to be sorted
+ */
 export function sortListRank(list: any[]) {
-	let factors = allRankingFactors.slice().sort((a, b) => a === winningFactor ? -1 : 1);
+	let factors = Object.keys(winningFactors).sort((a, b) => a === winningFactor ? -1 : 1);
 
 	list.sort((a, b) => {
 		for (let i = 0; i < factors.length; i++) {
@@ -49,6 +75,11 @@ export function sortListRank(list: any[]) {
 	});
 }
 
+/**
+ * Get the ownerId of MVP among given teams.
+ * 
+ * @param teams 
+ */
 export function getMvpOwnerIds(teams: Team[]) {
 	let maxScore = 0;
 	let totalMemberCount = 0;
@@ -76,6 +107,12 @@ export function getMvpOwnerIds(teams: Team[]) {
 
 	return mvpOwnerIds;
 }
+
+export function getWinningLabel() {
+	return winningFactors[winningFactor].label;
+}
+
+
 
 // export function getMvpOwnerIds(teams: Team[]) {
 // 	let bestTeamIndices: number[] = [];

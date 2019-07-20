@@ -20,3 +20,12 @@ export interface LeaderboardData {
 	icon: string;
 	teams: Team[];
 }
+
+export interface Configuration {
+	boardTitle: string;
+	carouselInterval: number;
+	startDate: string;
+	endDate: string;
+	scoreExpectation: number;
+	winningCondition: number;
+}

@@ -1,4 +1,4 @@
-// import { LeaderboardData } from './LeaderboardData';
+import { Configuration } from './LeaderboardData';
 // import redsox from '../images/theme-baseball/red-sox.png';
 // import yankees from '../images/theme-baseball/yankees.png';
 // import themeIcon from '../images/theme-baseball/theme-icon.png';
@@ -9,8 +9,8 @@
  * The theme name may be the indentifier.
  */
 // const baseUrl = 'http://184.73.190.18/TF-Leaderboard-API/tf-leaderboard/';
-const baseUrl = 'http://dashboard.hq.transfinder.com/TF-Leaderboard-API/tf-leaderboard/';
-// const baseUrl = 'http://localhost/TF-Leaderboard-API/tf-leaderboard/';
+// const baseUrl = 'http://dashboard.hq.transfinder.com/TF-Leaderboard-API/tf-leaderboard/';
+const baseUrl = 'http://localhost/TF-Leaderboard-API/tf-leaderboard/';
 const templateId = 1;
 
 // let mock_data: LeaderboardData = {
@@ -100,24 +100,32 @@ const templateId = 1;
 
 export function fetchTemplateSetting() {
 	return fetch(`${baseUrl}template/${templateId}`)
-		.then(res => res.json())
-		.then(res => {
-			return res;
-		});
+		.then(res => res.json());
 }
 
 export function fetchCaseData(startDate: string, endDate: string) {
 	return fetch(`${baseUrl}casedata?startDate=${startDate}&endDate=${endDate}`)
-		.then(res => res.json())
-		.then(res => {
-			return res;
-		});
+		.then(res => res.json());
 }
 
 export function fetchImages() {
 	return fetch(`${baseUrl}getimages/${templateId}`)
+		.then(res => res.json());
+}
+
+export function fetchConfiguration() {
+	return fetch(`${baseUrl}getconfiguration`)
 		.then(res => res.json())
 		.then(res => {
-			return res;
+			let config: Configuration = {
+				boardTitle: res["BoardTitle"],
+				carouselInterval: +res["CarouselInterval"],
+				startDate: res["StartDate"],
+				endDate: res["EndDate"],
+				scoreExpectation: +res["ScoreExpectation"],
+				winningCondition: res["WinningCondition"]
+			};
+
+			return config;
 		});
 }
