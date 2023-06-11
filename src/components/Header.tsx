@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Modal, Slider, InputNumber, Input, DatePicker, Select, Menu } from 'antd';
 import moment from 'moment';
 import '../styles/Header.scss';
+import dayjs from 'dayjs';
 
 
 interface Props {
@@ -124,7 +125,7 @@ export default class Header extends PureComponent<Props, State> {
 					<div className='input-title'>Date Range</div>
 					<div className='daterange-modal content-wrapper'>
 						<DatePicker.RangePicker
-							defaultValue={[moment(startDate, dateFormat), moment(endDate, dateFormat)]}
+							defaultValue={[dayjs(startDate, dateFormat), dayjs(endDate, dateFormat)]}
 							format={dateFormat}
 							onChange={(dates) => this.onDateRangeChange(dates)} />
 					</div>
